@@ -4,10 +4,10 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 
+const chalk = require('chalk');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   // Global Validation Pipe
   app.useGlobalPipes(new ValidationPipe());
 
@@ -22,7 +22,8 @@ async function bootstrap() {
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, swaggerDocument);
   }
-  
+  console.log(chalk.yellow("The application up on port:"),
+              chalk.yellow.underline.bold(configuration().server.port || 3000));
   await app.listen(configuration().server.port || 3000);
 }
 bootstrap();
