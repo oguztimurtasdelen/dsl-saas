@@ -13,5 +13,8 @@ export default () => ({
         name: process.env.DATABASE_NAME,
         username: process.env.DATABASE_USERNAME,
         password: process.env.DATABASE_PASSWORD
-    }
+    },
+    mongoDB:{
+        url: process.env.MONGO_URI
+    } 
 })
