@@ -22,14 +22,14 @@ const chalk = require('chalk');
         onConnectionCreate(connection) {
           connection.on('connected', () => {
             const client = connection.getClient();
-
-            console.log(client)
-            console.log(chalk.green.bold("----> "),
-                        chalk.green("The MongoDB connection established by "), 
-                        chalk.bgGreen.bold.inverse(client.options.credentials.username),
-                        chalk.green(" with project called "),
-                        chalk.bgGreen.bold.inverse(client.options.appName)
-                      )
+            // Log db connection information.
+            console.log(chalk.cyan.bold("----> "),
+                        chalk.cyan("The MongoDB connection established by "), 
+                        chalk.bgCyan.bold.inverse(client.options.credentials.username),
+                        chalk.cyan("(dbUser) with project called "),
+                        chalk.bgCyan.bold.inverse(client.options.appName),
+                        chalk.cyan("(clusterName)")
+                      );
           });
           connection.on('error', (err) => {
             // If there isn't throw, the useFactory is trying again and again.

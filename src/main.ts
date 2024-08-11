@@ -22,8 +22,8 @@ async function bootstrap() {
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, swaggerDocument);
   }
-  console.log(chalk.yellow("--> The application up on port:"),
-              chalk.yellow.underline.bold(configuration().server.port || 3000));
+  console.log(chalk.cyan("----> The application up on port:"),
+              chalk.cyan.underline.bold(configuration().server.port || 3000));
   await app.listen(configuration().server.port || 3000);
 }
 bootstrap();
