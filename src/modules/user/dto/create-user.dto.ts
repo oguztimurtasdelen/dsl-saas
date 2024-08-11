@@ -9,8 +9,9 @@ export class CreateUserDto {
     passwordValidation: string;
     @IsNotEmpty()
     userRole : string;
-    @IsNotEmpty()
+    // Passing to DTO first for creating is returning bad request
+    //@IsNotEmpty()
     name: string ; 
-    @IsNotEmpty()
+    //@IsNotEmpty()
     surname : string;
 }
