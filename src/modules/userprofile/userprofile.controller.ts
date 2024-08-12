@@ -9,7 +9,7 @@ export class UserprofileController {
 
   @Post()
   create(@Body() createUserprofileDto: CreateUserprofileDto) {
-    return this.userprofileService.createUserProfile(createUserprofileDto, "");
+    return this.userprofileService.createUserProfile(createUserprofileDto);
   }
 
   @Get()

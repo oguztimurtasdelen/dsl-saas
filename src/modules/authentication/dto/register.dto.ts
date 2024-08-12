@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsStrongPassword } from "class-validator";
 import message from "src/customs/locales/message";
+import { UserRole } from "src/customs/userrole.enum";
 
 export class RegisterDto {
     @IsNotEmpty({message: message().validation["name.not.empty"]})
@@ -26,5 +27,5 @@ export class RegisterDto {
     passwordValidation: string;
 
     @IsNotEmpty({message: message().validation["userrole.not.empty"]})
-    userRole : string;
+    userRole : UserRole;
 }
