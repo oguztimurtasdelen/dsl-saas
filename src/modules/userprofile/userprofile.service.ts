@@ -10,10 +10,7 @@ export class UserprofileService {
   constructor(@InjectModel(UserProfile.name) private userProfileModel: Model<UserProfile>){}
 
   createUserProfile(createUserprofileDto: CreateUserprofileDto, userId: string) {
-   ///const newProfile = new this.userProfileModel(createUserprofileDto);
-   //console.log("In userProfileService userId is " , userId, " createUserProfileDto  is" );
-   //console.log(createUserprofileDto)
-   return null;
+   return `This action adds a user profile`;
   }
 
   findAll() {
