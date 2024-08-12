@@ -1,20 +1,20 @@
+import { DatabaseConfigModel } from "src/modules/database/config.model";
+
 export default () => ({
     system: {
-        environment: process.env.ENVIRONMENT || 'DEVELOPMENT',
-        app_version: '1.0', 
+        environment: process.env.ENVIRONMENT || 'DEV',
+        app_version: process.env.APPVERSION, 
     },
     server: {
         url: process.env.SERVER_URL,
         port: parseInt(process.env.PORT, 10) || 3000,
     },
-    database: {
+    database: <DatabaseConfigModel>{
+        type: process.env.DATABASE_TYPE,
         host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT,
+        port: parseInt(process.env.DATABASE_PORT, 10) || 0,
         name: process.env.DATABASE_NAME,
         username: process.env.DATABASE_USERNAME,
         password: process.env.DATABASE_PASSWORD
-    },
-    mongoDB: {
-        url: process.env.MONGO_URI
-    }
+   },
 })
