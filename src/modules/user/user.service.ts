@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,21 +15,6 @@ export class UserService {
     //private readonly userProfileService: UserprofileService
       
   ){}
-  
-  async createUser(createUserDto: CreateUserDto) {
-    const newUser = new this.userModel(createUserDto);
-    const savedUser = await newUser.save();
-    console.log("Service-User: createUserDto")
-    console.log(createUserDto)
-    console.log("Service-User: savedUser")
-    
-    // TODO the craete user _id needs to return to call service for profile creating
-    /*æß
-    const createUserProfileDto = new CreateUserprofileDto();
-    this.userProfileService.createUserProfile(createUserProfileDto, savedUser._id)
-    */
-    return null;
-  }
 
   findAll() {
     return `This action returns all user`;
@@ -38,10 +22,6 @@ export class UserService {
 
   findOne(id: string) {
     return `This action returns a #${id} user`;
-  }
-
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
   }
 
   remove(id: string) {
