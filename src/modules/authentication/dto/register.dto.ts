@@ -28,4 +28,7 @@ export class RegisterDto {
 
     @IsNotEmpty({message: message().validation["userrole.not.empty"]})
     userRole : UserRole;
+
+    isEmailVerified: boolean;
+    isActive: boolean;
 }
