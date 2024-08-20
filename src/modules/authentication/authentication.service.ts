@@ -4,28 +4,30 @@ import { LoginDto } from './dto/login.dto';
 import { User } from '../user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserprofileService } from '../userprofile/userprofile.service';
+import { CreateUserprofileDto } from '../userprofile/dto/create-userprofile.dto';
+import { UserType } from '../user/user.type';
 
 @Injectable()
 export class AuthenticationService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly userProfileService : UserprofileService
   ) {}
 
-  async registerUser(registerDto: RegisterDto) {
-    console.log(registerDto);
+  async registerUser(userType: UserType): Promise<User> {
     
-    const newUser = this.userRepository.create({
-      email: registerDto.email,
-      password: registerDto.password,
-      userRole: registerDto.userRole
-    });
-
-    return (await this.userRepository.save(newUser))
+      
+    // Convert dto to type - User
+    // Insert type below
+    const _user: User = <User>{};
+    _user.email = userType.email;
+    const newUser = this.userRepository.create();
     
-
-    return 'This action adds a new authentication';
+    return await this.userRepository.save(newUser);
+    
   }
 
   loginUser(loginDto: LoginDto) {

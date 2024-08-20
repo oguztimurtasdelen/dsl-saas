@@ -2,18 +2,33 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { AuthenticationService } from './authentication.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { UserprofileService } from '../userprofile/userprofile.service';
+import { CreateUserprofileDto } from '../userprofile/dto/create-userprofile.dto';
+import { User } from '../user/entities/user.entity';
+import { convertCreateUserDtoToType } from "../user/functions/convertDtoToType.function";
+
 
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
+    private readonly userProfileService : UserprofileService
   ) {}
 
   @Post('signup')
-  register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto) {
 
     // Call userprofile service here
-    return this.authenticationService.registerUser(registerDto);
+    
+    const registeredUser: User = await this.authenticationService.registerUser(convertCreateUserDtoToType(registerDto));
+
+    let _userProfile: CreateUserprofileDto = <CreateUserprofileDto>{};
+
+    _userProfile.userId = registeredUser.id;
+    _userProfile.name = registerDto.name;
+    _userProfile.surname = registerDto.surname;
+
+    return this.userProfileService.createUserProfile(_userProfile);
   }
 
   @Post('signin')

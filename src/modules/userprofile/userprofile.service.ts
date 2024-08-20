@@ -7,7 +7,8 @@ import { UpdateUserprofileDto } from './dto/update-userprofile.dto';
 export class UserprofileService {
 
   createUserProfile(createUserprofileDto: CreateUserprofileDto) {
-   return `This action adds a user profile`;
+    console.log(createUserprofileDto)
+    return `This action adds a user profile`;
   }
 
   findAll() {
