@@ -5,18 +5,20 @@ import databaseConfig from "./config/config";
 
 // Entities
 import { User } from "../user/entities/user.entity";
+import { Userprofile } from "../userprofile/entities/userprofile.entity";
 
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
             imports: [],
             useFactory: ()=> {
-                const env = process.env.ENVIRONMENT || 'DEV';
+                const env = process.env.ENVIRONMENT || 'DEVELOPMENT';
                 const dbConfig = databaseConfig(env, configuration().database);
                 return {
                     ...dbConfig,
                     entities: [
-                        User
+                        User,
+                        Userprofile
                     ]
                 };
             }
