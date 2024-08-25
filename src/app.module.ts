@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import configuration from './config/configuration';
 
-
 // Modules
 import { UserModule } from './modules/user/user.module';
 import { UserprofileModule } from './modules/userprofile/userprofile.module';
@@ -21,12 +20,13 @@ const chalk = require('chalk');
       load: [configuration],
       isGlobal: true
     }),
-    
+
     DatabaseModule,
+    AuthenticationModule,
     UserModule,
     UserprofileModule,
     DeviceModule,
-    AuthenticationModule
+    
   ],
   controllers: [AppController],
   providers: [AppService],

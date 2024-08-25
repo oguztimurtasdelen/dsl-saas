@@ -1,14 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserprofileDto } from './dto/create-userprofile.dto';
-import { UpdateUserprofileDto } from './dto/update-userprofile.dto';
+import { UpdateUserProfileDto } from './dto/update-userprofile.dto';
+import { UserProfileType } from './userprofile.type';
+import { Userprofile } from './entities/userprofile.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class UserprofileService {
 
-  createUserProfile(createUserprofileDto: CreateUserprofileDto) {
-    console.log(createUserprofileDto)
-    return `This action adds a user profile`;
+  constructor(
+    @InjectRepository(Userprofile)
+    private readonly userProfileRepository: Repository<Userprofile>
+  ) {}
+
+  async createUserProfile(userProfileType: UserProfileType): Promise<Userprofile> {
+    const _userProfile = this.userProfileRepository.create(<Userprofile>{
+      userId: userProfileType.userId,
+      name: userProfileType.name,
+      surname: userProfileType.surname
+    });
+    
+    
+    return await this.userProfileRepository.save(_userProfile);
   }
 
   findAll() {
@@ -19,7 +33,7 @@ export class UserprofileService {
     return `This action returns a #${id} userprofile`;
   }
 
-  update(id: string, updateUserprofileDto: UpdateUserprofileDto) {
+  update(id: string, updateUserprofileDto: UpdateUserProfileDto) {
     return `This action updates a #${id} userprofile`;
   }
 

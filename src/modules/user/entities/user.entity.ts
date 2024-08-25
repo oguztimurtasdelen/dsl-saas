@@ -1,12 +1,12 @@
-import { Column, Entity, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ObjectIdColumn } from "typeorm";
 import { UserRole } from "src/customs/userrole.enum";
 
 @Entity()
 export class User {
     @ObjectIdColumn()
-    id: string;
+    _id: string;
 
-    @Column({unique: false})
+    @Column({unique: true})
     email: string;
 
     @Column({nullable: false})

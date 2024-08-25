@@ -1,7 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 import message from "src/customs/locales/message";
 
-export class CreateUserprofileDto {
+export class CreateUserProfileDto {
     @IsNotEmpty({message: message().userprofile["id.not.empty"]})
     userId : string;
     @IsNotEmpty({message: message().validation["name.not.empty"]})

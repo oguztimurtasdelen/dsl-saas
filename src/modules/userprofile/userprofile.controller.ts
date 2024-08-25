@@ -1,15 +1,16 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { UserprofileService } from './userprofile.service';
-import { CreateUserprofileDto } from './dto/create-userprofile.dto';
-import { UpdateUserprofileDto } from './dto/update-userprofile.dto';
+import { CreateUserProfileDto } from './dto/create-userprofile.dto';
+import { UpdateUserProfileDto } from './dto/update-userprofile.dto';
+import { convertCreateUserProfileDtoToType } from './functions/convertDtoToType.function';
 
 @Controller('userprofile')
 export class UserprofileController {
   constructor(private readonly userprofileService: UserprofileService) {}
 
   @Post()
-  create(@Body() createUserprofileDto: CreateUserprofileDto) {
-    return this.userprofileService.createUserProfile(createUserprofileDto);
+  async create(@Body() createUserprofileDto: CreateUserProfileDto) {
+    return await this.userprofileService.createUserProfile(convertCreateUserProfileDtoToType(createUserprofileDto));
   }
 
   @Get()
@@ -23,7 +24,7 @@ export class UserprofileController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserprofileDto: UpdateUserprofileDto) {
+  update(@Param('id') id: string, @Body() updateUserprofileDto: UpdateUserProfileDto) {
     return this.userprofileService.update(id, updateUserprofileDto);
   }
 
