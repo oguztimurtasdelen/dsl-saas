@@ -13,6 +13,7 @@ export default ()=> ({
         "id.not.empty": "Device ID field cannot be empty!",
         "macaddress.not.empty": "Device MAC address cannot be empty!",
         "macaddress.not.valid": "Enter a valid MAC Address!",
+        "code.not.empty": "Device Code field cannot be empty!",
         "name.not.empty": "Device Name field cannot be empty!"
     },
     userprofile: {

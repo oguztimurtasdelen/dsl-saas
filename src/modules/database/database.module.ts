@@ -6,6 +6,7 @@ import databaseConfig from "./config/config";
 // Entities
 import { User } from "../user/entities/user.entity";
 import { Userprofile } from "../userprofile/entities/userprofile.entity";
+import { Device } from "../device/entities/device.entity";
 
 @Module({
     imports: [
@@ -18,7 +19,8 @@ import { Userprofile } from "../userprofile/entities/userprofile.entity";
                     ...dbConfig,
                     entities: [
                         User,
-                        Userprofile
+                        Userprofile,
+                        Device
                     ]
                 };
             }
