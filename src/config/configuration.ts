@@ -1,5 +1,6 @@
 import { DatabaseConfigModel } from "src/modules/database/config.model";
 
+
 export default () => ({
     system: {
         environment: process.env.ENVIRONMENT || 'DEV',
@@ -11,7 +12,7 @@ export default () => ({
     },
     database: <DatabaseConfigModel>{
         type: process.env.DATABASE_TYPE,
-        host: process.env.DATABASE_HOST,
+        uri: process.env.DATABASE_URI,
         port: parseInt(process.env.DATABASE_PORT, 10) || 0,
         name: process.env.DATABASE_NAME,
         username: process.env.DATABASE_USERNAME,
