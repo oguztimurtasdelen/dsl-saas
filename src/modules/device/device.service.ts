@@ -33,11 +33,10 @@ export class DeviceService {
     return await this.deviceModel.findById(_id);
   }
 
-  async update(id: string, updateDeviceDto: UpdateDeviceDto) {
-    const {_id, ...updatedDeviceDto} = updateDeviceDto;
+  async update(id: string, deviceType: DeviceType) {
     const updatedDevice = await this.deviceModel.findByIdAndUpdate(
       id, 
-      updatedDeviceDto,
+      deviceType,
       {
         new: true, // Return updated data
         runValidators: true
