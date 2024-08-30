@@ -3,7 +3,7 @@ import { UpdateUserProfileDto } from './dto/update-userprofile.dto';
 import { UserProfileType } from './userprofile.type';
 import { UserProfile } from './userprofile.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 
 @Injectable()
@@ -24,12 +24,12 @@ export class UserprofileService {
     return _userProfile;
   }
 
-  findAll() {
-    return `This action returns all userprofile`;
+  async findAll(): Promise<UserProfile[]> {
+    return await this.userProfileModel.find().exec();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} userprofile`;
+  async findOne(userId: string): Promise<UserProfile> {
+    return await this.userProfileModel.findOne({userId: new Types.ObjectId(userId)}).exec();
   }
 
   update(id: string, updateUserprofileDto: UpdateUserProfileDto) {

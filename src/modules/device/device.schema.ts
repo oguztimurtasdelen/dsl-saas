@@ -4,10 +4,7 @@ import { Document } from "mongoose";
 
 @Schema()
 export class Device extends Document{
-    /*
-    @ObjectIdColumn()
-    _id: string;
-    */
+
     @Prop({unique: false, required: true})
     macAddress: string;
 
