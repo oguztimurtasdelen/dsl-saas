@@ -14,13 +14,13 @@ export class UserprofileController {
   }
 
   @Get()
-  findAll() {
-    return this.userprofileService.findAll();
+  async findAll() {
+    return await this.userprofileService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userprofileService.findOne(id);
+  @Get(':userId')
+  async findOne(@Param('userId') userId: string) {
+    return await this.userprofileService.findOne(userId);
   }
 
   @Put(':id')

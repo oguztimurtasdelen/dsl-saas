@@ -5,8 +5,6 @@ import { UserRole } from "src/customs/userrole.enum";
 
 @Schema()
 export class User extends Document {
-    /*@ObjectIdColumn()
-    _id: string; */
 
     @Prop({unique: true, required: true})
     email: string;

@@ -12,8 +12,6 @@ export class DeviceController {
   async create(@Body() createDeviceDto: CreateDeviceDto) {
     const _createdDevice = await this.deviceService.create(convertCreateDeviceDtoToType(createDeviceDto));
 
-    console.log(_createdDevice)
-
     return _createdDevice;
   }
 

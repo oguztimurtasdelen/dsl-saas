@@ -21,9 +21,6 @@ export class AuthenticationController {
   async register(@Body() registerDto: RegisterDto) {
 
     const registeredUser: User = await this.authenticationService.registerUser(convertCreateUserDtoToType(registerDto));
-    
-    console.log(registeredUser);
-
 
     let userProfileDto: CreateUserProfileDto = <CreateUserProfileDto>{
       userId: registeredUser._id,

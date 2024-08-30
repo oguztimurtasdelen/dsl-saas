@@ -15,30 +15,35 @@ export class DeviceService {
   ) {}
 
   async create(deviceType: DeviceType): Promise<Device> {
-
-    const _device = new this.deviceModel(deviceType);
-    return await _device.save();
-    /*
-    const _device = this.deviceRepository.create(<Device>{
+    const _device = await this.deviceModel.create(<Device>{
       macAddress: deviceType.macAddress,
       deviceCode: deviceType.deviceCode,
       deviceName: deviceType.deviceName,
       description: deviceType.description
     });
-    return await this.deviceRepository.save(_device);
-    */
+
+    return _device;
   }
 
-  findAll(): String {
-    return `This action returns all device`;
+  async findAll(): Promise<Device[]> {
+    return await this.deviceModel.find().exec();
   }
 
-  findOne(_id: string): String {
-    return `This action returns a #${_id} device`;
+  async findOne(_id: string): Promise<Device> {
+    return await this.deviceModel.findById(_id);
   }
 
-  update(id: string, updateDeviceDto: UpdateDeviceDto) {
-    return `This action updates a #${id} device`;
+  async update(id: string, updateDeviceDto: UpdateDeviceDto) {
+    const {_id, ...updatedDeviceDto} = updateDeviceDto;
+    const updatedDevice = await this.deviceModel.findByIdAndUpdate(
+      id, 
+      updatedDeviceDto,
+      {
+        new: true, // Return updated data
+        runValidators: true
+      }
+    );
+    return updatedDevice;
   }
 
   remove(id: string) {
