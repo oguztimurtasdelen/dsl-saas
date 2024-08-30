@@ -2,19 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { DeviceType } from './device.type';
-import { Device } from './entities/device.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Device } from './device.schema';
 
 @Injectable()
 export class DeviceService {
 
   constructor(
-    @InjectRepository(Device)
-    private readonly deviceRepository: Repository<Device>
+    @InjectModel(Device.name)
+    private readonly deviceModel: Model<Device>
   ) {}
 
   async create(deviceType: DeviceType): Promise<Device> {
+
+    const _device = new this.deviceModel(deviceType);
+    return await _device.save();
+    /*
     const _device = this.deviceRepository.create(<Device>{
       macAddress: deviceType.macAddress,
       deviceCode: deviceType.deviceCode,
@@ -22,17 +26,15 @@ export class DeviceService {
       description: deviceType.description
     });
     return await this.deviceRepository.save(_device);
+    */
   }
 
-  async findAll(): Promise<Device[]> {
-    return this.deviceRepository.find();
+  findAll(): String {
+    return `This action returns all device`;
   }
 
-  async findOne(_id: string): Promise<Device |String> {
-    console.log(_id)
-    //const _device = await this.deviceRepository.findOneBy({_id});
-    
-    return '_device'
+  findOne(_id: string): String {
+    return `This action returns a #${_id} device`;
   }
 
   update(id: string, updateDeviceDto: UpdateDeviceDto) {

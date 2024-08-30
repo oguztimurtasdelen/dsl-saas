@@ -3,7 +3,6 @@ import { UserType } from "../user.type";
 
 export function convertCreateUserDtoToType(createUserDto: RegisterDto): UserType {
     return <UserType>{
-        _id: null,
         email: createUserDto.email,
         password: createUserDto.password,
         userRole: createUserDto.userRole,
