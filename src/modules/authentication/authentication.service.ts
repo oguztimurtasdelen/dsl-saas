@@ -14,12 +14,12 @@ export class AuthenticationService {
   ) {}
 
   async registerUser(userType: UserType): Promise<User> {
-
+    /* create is more proper.
     const _user = new this.userModel(userType);
     return _user.save();
-  
-    /*
-    const _user = this.userRepository.create(<User>{
+    */
+    
+    const _user = await this.userModel.create(<User>{
       email: userType.email,
       password: userType.password,
       userRole: userType.userRole,
@@ -27,8 +27,8 @@ export class AuthenticationService {
       isActive: userType.isActive
     });
     
-    return await this.userRepository.save(_user);
-    */
+    return _user;
+    
     
   }
 

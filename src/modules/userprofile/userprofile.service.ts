@@ -15,18 +15,18 @@ export class UserprofileService {
   ) {}
 
   async createUserProfile(userProfileType: UserProfileType): Promise<UserProfile> {
+    /* Create is more proper.
     const _userProfile = new this.userProfileModel(userProfileType);
     return _userProfile.save();
-    /*
-    const _userProfile = this.userProfileRepository.create(<Userprofile>{
+    */
+    
+    const _userProfile = await this.userProfileModel.create(<UserProfile>{
       userId: userProfileType.userId,
       name: userProfileType.name,
       surname: userProfileType.surname
     });
-    
-    
-    return await this.userProfileRepository.save(_userProfile);
-    */
+
+    return _userProfile;
   }
 
   findAll() {
