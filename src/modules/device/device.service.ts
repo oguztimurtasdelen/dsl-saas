@@ -45,7 +45,7 @@ export class DeviceService {
     return updatedDevice;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} device`;
+  async remove(id: string) {
+    return await this.deviceModel.findByIdAndDelete(id);
   }
 }
