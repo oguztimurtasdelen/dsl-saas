@@ -22,6 +22,9 @@ export class AuthenticationController {
 
     const registeredUser: User = await this.authenticationService.registerUser(convertCreateUserDtoToType(registerDto));
     
+    console.log(registeredUser);
+
+
     let userProfileDto: CreateUserProfileDto = <CreateUserProfileDto>{
       userId: registeredUser._id,
       name: registerDto.name,
@@ -30,12 +33,7 @@ export class AuthenticationController {
 
     const registeredUserProfile: UserProfile = await this.userProfileService.createUserProfile(convertCreateUserProfileDtoToType(userProfileDto));
     
-    let v_result = {result: 'SUCCESS',
-                    userId: registeredUser._id,
-                    userName: registeredUserProfile.name,
-                    userSurname: registeredUserProfile.surname
-                   };
-    return v_result;
+    return registeredUser;
     
   }
 

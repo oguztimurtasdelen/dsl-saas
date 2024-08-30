@@ -14,11 +14,6 @@ export class AuthenticationService {
   ) {}
 
   async registerUser(userType: UserType): Promise<User> {
-    /* create is more proper.
-    const _user = new this.userModel(userType);
-    return _user.save();
-    */
-    
     const _user = await this.userModel.create(<User>{
       email: userType.email,
       password: userType.password,
@@ -28,8 +23,6 @@ export class AuthenticationService {
     });
     
     return _user;
-    
-    
   }
 
   loginUser(loginDto: LoginDto) {
