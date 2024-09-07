@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
-import { convertCreateDeviceDtoToType, convertUpdateDeviceDtoToType } from './functions/convertDtoToType.function';
+import { convertDeviceDtoToType } from './functions/convertDtoToType.function';
 
 @Controller('device')
 export class DeviceController {
@@ -10,7 +10,7 @@ export class DeviceController {
 
   @Post()
   async create(@Body() createDeviceDto: CreateDeviceDto) {
-    const _createdDevice = await this.deviceService.create(convertCreateDeviceDtoToType(createDeviceDto));
+    const _createdDevice = await this.deviceService.create(convertDeviceDtoToType(createDeviceDto));
 
     return _createdDevice;
   }
@@ -27,7 +27,7 @@ export class DeviceController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    return this.deviceService.update(id, convertUpdateDeviceDtoToType(updateDeviceDto));
+    return this.deviceService.update(id, convertDeviceDtoToType(updateDeviceDto));
   }
 
   @Delete(':id')

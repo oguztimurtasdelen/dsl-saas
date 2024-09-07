@@ -34,15 +34,14 @@ export class DeviceService {
   }
 
   async update(id: string, deviceType: DeviceType) {
-    const updatedDevice = await this.deviceModel.findByIdAndUpdate(
+    return await this.deviceModel.findByIdAndUpdate(
       id, 
       deviceType,
       {
         new: true, // Return updated data
         runValidators: true
       }
-    );
-    return updatedDevice;
+    ); 
   }
 
   async remove(id: string) {
