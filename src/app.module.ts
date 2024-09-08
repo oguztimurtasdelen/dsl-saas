@@ -7,7 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 // Modules
 import { UserModule } from './modules/user/user.module';
-import { UserprofileModule } from './modules/userprofile/userprofile.module';
+import { ProfileModule } from './modules/profile/profile.module';
 import { DeviceModule } from "./modules/device/device.module";
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 
@@ -28,7 +28,7 @@ const chalk = require('chalk');
 
     AuthenticationModule,
     UserModule,
-    UserprofileModule,
+    ProfileModule,
     DeviceModule,
     
   ],

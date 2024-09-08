@@ -1,10 +1,10 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { User } from "../user/user.schema";
-import { UserprofileModule } from "./userprofile.module";
+import { UserRole } from "src/customs/userrole.enum";
 
 @Schema()
-export class UserProfile extends Document {
+export class Profile extends Document {
 
     @Prop({required: true, unique: true, ref: User.name})
     userId: Types.ObjectId;
@@ -14,6 +14,17 @@ export class UserProfile extends Document {
 
     @Prop({required: true})
     surname: string;
+
+    @Prop({
+        type: String,
+        enum: UserRole, 
+        default: UserRole.Athlete
+    })
+    userRole: UserRole;
+
+    @Prop({required: true})
+    isActive: Boolean;
+    
 }
 
-export const UserProfileSchema = SchemaFactory.createForClass(UserProfile)
+export const ProfileSchema = SchemaFactory.createForClass(Profile)
