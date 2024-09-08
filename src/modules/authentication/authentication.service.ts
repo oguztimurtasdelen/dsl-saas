@@ -17,7 +17,6 @@ export class AuthenticationService {
     const _user = await this.userModel.create(<User>{
       email: userType.email,
       password: userType.password,
-      userRole: userType.userRole,
       isEmailVerified: userType.isEmailVerified,
       isActive: userType.isActive
     });

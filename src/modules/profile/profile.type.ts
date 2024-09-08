@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
 
-export type UserProfileType = {
+export type ProfileType = {
     userId: Types.ObjectId;
     name: string;
     surname: string;
+    userRole: string;
 }

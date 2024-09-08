@@ -1,9 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserProfileDto } from './create-userprofile.dto';
+import { CreateProfileDto } from './create-profile.dto';
 import { IsDateString, IsNotEmpty, IsPhoneNumber } from 'class-validator';
 import message from 'src/customs/locales/message';
 
-export class UpdateUserProfileDto extends PartialType(CreateUserProfileDto) {
+export class UpdateProfileDto extends PartialType(CreateProfileDto) {
     @IsNotEmpty({message: message().userprofile['id.not.empty']})
     _id : string;
     @IsNotEmpty({message: message().userprofile['birthdate.not.empty']})
