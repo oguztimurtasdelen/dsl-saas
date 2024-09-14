@@ -14,12 +14,14 @@ export class ProfileService {
     private readonly profileModel: Model<Profile>
   ) {}
 
-  async createProfile(userProfileType: ProfileType): Promise<Profile> {    
+  async createProfile(profileType: ProfileType): Promise<Profile> {    
     const _userProfile = await this.profileModel.create(<Profile>{
-      userId: userProfileType.userId,
-      name: userProfileType.name,
-      surname: userProfileType.surname,
-      userRole: userProfileType.userRole
+      userId: profileType.userId,
+      name: profileType.name,
+      surname: profileType.surname,
+      birthDate: profileType.birthDate,
+      profilePhoto: profileType.profilePhoto,
+      isActive: profileType.isActive
     });
 
     return _userProfile;
@@ -33,11 +35,18 @@ export class ProfileService {
     return await this.profileModel.findOne({userId: new Types.ObjectId(userId)}).exec();
   }
 
-  update(id: string, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
+  async update(id: string, profileType: ProfileType) {
+    return await this.profileModel.findByIdAndUpdate(
+      id,
+      profileType,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} profile`;
+  async remove(id: string) {
+    return await this.profileModel.findByIdAndDelete(id);
   }
 }

@@ -1,12 +1,14 @@
 import { CreateProfileDto } from "../dto/create-profile.dto";
+import { UpdateProfileDto } from "../dto/update-profile.dto";
 import { ProfileType } from "../profile.type";
 
-export function convertCreateProfileDtoToType(createProfileDto: CreateProfileDto): ProfileType {
+export function convertProfileDtoToType(profileDto: CreateProfileDto | UpdateProfileDto): ProfileType {
     return <ProfileType>{
-        _id: null,
-        userId: createProfileDto.userId,
-        name: createProfileDto.name,
-        surname: createProfileDto.surname,
-        userRole: createProfileDto.userRole
+        userId: profileDto.userId,
+        name: profileDto.name,
+        surname: profileDto.surname,
+        birthDate: (profileDto as UpdateProfileDto).birthDate || null,
+        profilePhoto: (profileDto as UpdateProfileDto).profilePhoto || null,
+        isActive: (profileDto as UpdateProfileDto).isActive || true
     }
 }

@@ -5,4 +5,9 @@ export type ProfileType = {
     name: string;
     surname: string;
     userRole: string;
+    birthDate: string;
+    phoneNumber: string;
+    isPhoneNumberVerified: boolean;
+    profilePhoto: string;
+    isActive: boolean;
 }

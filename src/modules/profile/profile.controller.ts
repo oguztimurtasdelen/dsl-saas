@@ -2,15 +2,15 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { convertCreateProfileDtoToType } from './functions/convertDtoToType.function';
+import { convertProfileDtoToType } from './functions/convertDtoToType.function';
 
-@Controller('userprofile')
+@Controller('profile')
 export class ProfileController {
   constructor(private readonly userprofileService: ProfileService) {}
 
   @Post()
-  async create(@Body() createUserprofileDto: CreateProfileDto) {
-    return await this.userprofileService.createProfile(convertCreateProfileDtoToType(createUserprofileDto));
+  async create(@Body() createProfileDto: CreateProfileDto) {
+    return await this.userprofileService.createProfile(convertProfileDtoToType(createProfileDto));
   }
 
   @Get()
@@ -24,12 +24,12 @@ export class ProfileController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserprofileDto: UpdateProfileDto) {
-    return this.userprofileService.update(id, updateUserprofileDto);
+  async update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
+    return await this.userprofileService.update(id, convertProfileDtoToType(updateProfileDto));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userprofileService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.userprofileService.remove(id);
   }
 }
