@@ -10,7 +10,10 @@ const chalk = require('chalk');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Global Validation Pipe
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, // Ensures incoming request body is transformed to class instances
+    whitelist: true, // Strips out properties that are not in the DTO
+  }));
 
   // Swagger - API Doc - localhost:3000/api
   const swaggerEnvironments: Array<string> = ['DEVELOPMENT', 'ACCEPTANCE'];

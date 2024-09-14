@@ -1,17 +1,15 @@
-import { IsNotEmpty } from "class-validator";
+import { IsBoolean, IsDateString, IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
 import message from "src/customs/locales/message";
 import { UserRole } from "src/customs/userrole.enum";
 
 export class CreateProfileDto {
-    @IsNotEmpty({message: message().userprofile["id.not.empty"]})
+    @IsNotEmpty({message: 'userId cannot be empty!'})
     userId : Types.ObjectId;
-    @IsNotEmpty({message: message().validation["name.not.empty"]})
-    name : string;
-    @IsNotEmpty({message: message().validation["surname.not.empty"]})
-    surname : string;
-    @IsNotEmpty({message: message().validation["userrole.not.empty"]})
-    userRole : UserRole;
 
+    @IsNotEmpty({message: 'name cannot be empty!'})
+    name : string;
     
+    @IsNotEmpty({message: 'surname cannot be empty!'})
+    surname : string;
 }

@@ -6,7 +6,7 @@ import { CreateProfileDto } from '../profile/dto/create-profile.dto';
 import { User } from '../user/user.schema';
 import { convertCreateUserDtoToType } from "../user/functions/convertDtoToType.function";
 import { ProfileService } from '../profile/profile.service';
-import { convertCreateProfileDtoToType } from '../profile/functions/convertDtoToType.function';
+import { convertProfileDtoToType } from '../profile/functions/convertDtoToType.function';
 import { Profile } from '../profile/profile.schema';
 
 
@@ -19,16 +19,16 @@ export class AuthenticationController {
 
   @Post('signup')
   async register(@Body() registerDto: RegisterDto) {
-
+    
     const registeredUser: User = await this.authenticationService.registerUser(convertCreateUserDtoToType(registerDto));
 
     let profileDto: CreateProfileDto = <CreateProfileDto>{
       userId: registeredUser._id,
       name: registerDto.name,
-      surname: registerDto.surname
+      surname: registerDto.surname,
     };
 
-    const registeredUserProfile: Profile = await this.profileService.createProfile(convertCreateProfileDtoToType(profileDto));
+    const registeredUserProfile: Profile = await this.profileService.createProfile(convertProfileDtoToType(profileDto));
     
     return registeredUser;
     
