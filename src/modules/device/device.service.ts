@@ -33,7 +33,7 @@ export class DeviceService {
     return await this.deviceModel.findById(_id);
   }
 
-  async update(id: string, deviceType: DeviceType) {
+  async update(id: string, deviceType: DeviceType): Promise<Device> {
     return await this.deviceModel.findByIdAndUpdate(
       id, 
       deviceType,

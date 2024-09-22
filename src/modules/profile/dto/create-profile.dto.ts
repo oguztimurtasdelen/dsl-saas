@@ -5,7 +5,7 @@ import { UserRole } from "src/customs/userrole.enum";
 
 export class CreateProfileDto {
     @IsNotEmpty({message: 'userId cannot be empty!'})
-    userId : Types.ObjectId;
+    user: Types.ObjectId;
 
     @IsNotEmpty({message: 'userRole cannot be empty!'})
     @IsEnum(UserRole, {message: 'userRole is not valid!'})

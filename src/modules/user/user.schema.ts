@@ -1,6 +1,5 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
-import { UserRole } from "src/customs/userrole.enum";
+import { Document, Types } from "mongoose";
 import { TermsAndConditions } from "./dto/termsAndConditions.dto";
 
 @Schema({timestamps: true})
@@ -12,7 +11,7 @@ export class User extends Document {
     @Prop({required: true})
     password: string;
 
-    @Prop({required: true})
+    @Prop({required: false})
     termsAndConditions: TermsAndConditions;
 
     @Prop({required: true, default: false})
@@ -20,6 +19,9 @@ export class User extends Document {
 
     @Prop({required: true, default: true})
     isActive: boolean;
+
+    @Prop({unique: true, ref: 'Profile'})
+    profile: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -5,7 +5,7 @@ import { ProfileType } from "../profile.type";
 
 export function convertProfileDtoToType(profileDto: CreateProfileDto | UpdateProfileDto): ProfileType {
     return <ProfileType>{
-        userId: profileDto.userId,
+        user: profileDto.user,
         userRole: profileDto.userRole || UserRole.Athlete,
         name: profileDto.name,
         surname: profileDto.surname,
