@@ -5,18 +5,15 @@ import { TermsAndConditions } from "src/modules/user/dto/termsAndConditions.dto"
 import { IsPasswordValidationMatchConstraint } from "src/customs/validators/isPasswordValidationMatch.validator";
 
 export class RegisterDto {
-    /* Profile Fields Start */
+    @IsNotEmpty({message: 'userRole cannot be empty!'})
+    @IsEnum(UserRole, {message: 'userRole is not valid!'})
+    userRole: UserRole;
+
     @IsNotEmpty({message: 'name cannot be empty!'})
     name: string ;
 
     @IsNotEmpty({message: 'surname cannot be empty!'})
     surname: string;
-    /* Profile Fields End */
-
-    /* User Fields Start */
-    @IsOptional()
-    @IsPhoneNumber("TR", {message: 'phoneNumber is not valid'})
-    phoneNumber: string;
 
     @IsNotEmpty({message: 'email cannot be empty!'})
     @IsEmail({}, {message: 'email is not valid!'})
@@ -36,20 +33,16 @@ export class RegisterDto {
     @Validate(IsPasswordValidationMatchConstraint, {message: 'passwordValidation is not match with password'})
     passwordValidation: string;
 
-    @IsEnum(UserRole, {message: 'userRole is not valid!'})
-    userRole: UserRole;
+    @ValidateNested()
+    @Type(()=> TermsAndConditions)
+    @IsObject()
+    termsAndConditions: TermsAndConditions;
 
     @IsOptional()
     @IsBoolean({message: 'isEmailVerified is not valid! '})
     isEmailVerified: boolean;
 
     @IsOptional()
-    @IsBoolean({message: 'isPhoneNumberVerified is not valid! '})
-    isPhoneNumberVerified: boolean;
-
-    @ValidateNested()
-    @Type(()=> TermsAndConditions)
-    @IsObject()
-    termsAndConditions: TermsAndConditions;
-    /* User Fields End */
+    @IsBoolean({message: 'isActive is not valid!'})
+    isActive: boolean;
 }

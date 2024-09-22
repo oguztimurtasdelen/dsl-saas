@@ -12,7 +12,7 @@ export class UpdateProfileDto extends PartialType(CreateProfileDto) {
     birthDate : string;
 
     @IsOptional()
-    profilePhoto : string;
+    avatar : string;
 
     @IsNotEmpty({message: 'isActive cannot be empty!'})
     @IsBoolean({message: 'isActive is not valid!'})

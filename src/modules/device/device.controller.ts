@@ -26,12 +26,12 @@ export class DeviceController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    return this.deviceService.update(id, convertDeviceDtoToType(updateDeviceDto));
+  async update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
+    return await this.deviceService.update(id, convertDeviceDtoToType(updateDeviceDto));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deviceService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.deviceService.remove(id);
   }
 }

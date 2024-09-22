@@ -24,8 +24,9 @@ export class AuthenticationController {
 
     let profileDto: CreateProfileDto = <CreateProfileDto>{
       userId: registeredUser._id,
+      userRole: registerDto.userRole,
       name: registerDto.name,
-      surname: registerDto.surname,
+      surname: registerDto.surname
     };
 
     const registeredUserProfile: Profile = await this.profileService.createProfile(convertProfileDtoToType(profileDto));

@@ -5,13 +5,10 @@ import { TermsAndConditions } from "../dto/termsAndConditions.dto";
 
 export function convertCreateUserDtoToType(createUserDto: RegisterDto): UserType {
     return <UserType>{
-        userRole: createUserDto.userRole,
         email: createUserDto.email,
         password: createUserDto.password,
-        phoneNumber: createUserDto.phoneNumber,
-        isEmailVerified: createUserDto.isEmailVerified || false,
-        isPhoneNumberVerified: createUserDto.isPhoneNumberVerified || false,
         termsAndConditions: createUserDto.termsAndConditions || <TermsAndConditions>{},
+        isEmailVerified: createUserDto.isEmailVerified || false,
         isActive: true
     };
 
