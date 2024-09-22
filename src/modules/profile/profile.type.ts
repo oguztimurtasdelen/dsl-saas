@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export type ProfileType = {
-    userId: Types.ObjectId;
+    user: Types.ObjectId;
     userRole: string;
     name: string;
     surname: string;

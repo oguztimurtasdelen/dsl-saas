@@ -7,7 +7,7 @@ import { UserRole } from "src/customs/userrole.enum";
 export class Profile extends Document {
 
     @Prop({required: true, unique: true, ref: User.name})
-    userId: Types.ObjectId;
+    user: Types.ObjectId;
 
     @Prop({
         required: true,

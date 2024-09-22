@@ -16,7 +16,7 @@ export class ProfileService {
 
   async createProfile(profileType: ProfileType): Promise<Profile> {    
     const _userProfile = await this.profileModel.create(<Profile>{
-      userId: profileType.userId,
+      user: profileType.user,
       userRole: profileType.userRole,
       name: profileType.name,
       surname: profileType.surname,
@@ -29,11 +29,11 @@ export class ProfileService {
   }
 
   async findAll(): Promise<Profile[]> {
-    return await this.profileModel.find().exec();
+    return await this.profileModel.find().populate('user').exec();
   }
 
   async findOne(profileId: string): Promise<Profile> {
-    return await this.profileModel.findById(profileId).exec();
+    return await this.profileModel.findById(profileId).populate('user').exec();
   }
 
   async update(id: string, profileType: ProfileType) {
