@@ -6,32 +6,19 @@ import { TermsAndConditions } from "./dto/termsAndConditions.dto";
 @Schema({timestamps: true})
 export class User extends Document {
 
-    @Prop({
-        type: String,
-        enum: UserRole,
-        default: UserRole.Athlete,
-    })
-    userRole: UserRole;
-
     @Prop({unique: true, required: true})
     email: string;
 
     @Prop({required: true})
     password: string;
 
-    @Prop({required: false})
-    phoneNumber: string;
-
-    @Prop({default: true})
-    isEmailVerified: boolean;
-
-    @Prop({required: true})
-    isPhoneNumberVerified: boolean;
-
     @Prop({required: true})
     termsAndConditions: TermsAndConditions;
 
-    @Prop({default: true})
+    @Prop({required: true, default: false})
+    isEmailVerified: boolean;
+
+    @Prop({required: true, default: true})
     isActive: boolean;
 }
 

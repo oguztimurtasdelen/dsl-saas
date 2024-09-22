@@ -10,7 +10,4 @@ export class LoginDto {
     @IsNotEmpty({message: 'password cannot be empty!'})
     password: string;
 
-    @IsNotEmpty({message: 'userRole cannot be empty!'})
-    @IsEnum(UserRole, {message: 'userRole is not valid!'})
-    userRole: UserRole;
 }

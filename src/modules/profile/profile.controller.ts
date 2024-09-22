@@ -18,9 +18,9 @@ export class ProfileController {
     return await this.userprofileService.findAll();
   }
 
-  @Get(':userId')
-  async findOne(@Param('userId') userId: string) {
-    return await this.userprofileService.findOne(userId);
+  @Get(':profileId')
+  async findOne(@Param('profileId') profileId: string) {
+    return await this.userprofileService.findOne(profileId);
   }
 
   @Put(':id')

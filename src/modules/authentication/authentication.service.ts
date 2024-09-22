@@ -15,13 +15,10 @@ export class AuthenticationService {
 
   async registerUser(userType: UserType): Promise<User> {
     const _user = await this.userModel.create(<User>{
-      userRole: userType.userRole,
       email: userType.email,
       password: userType.password,
-      phoneNumber: userType.phoneNumber,
-      isEmailVerified: userType.isEmailVerified,
-      isPhoneNumberVerified: userType.isPhoneNumberVerified,
       termsAndConditions: userType.termsAndConditions,
+      isEmailVerified: userType.isEmailVerified,
       isActive: userType.isActive
     });
     
