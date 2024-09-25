@@ -19,7 +19,6 @@ export class UserController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto)
     return await this.userService.update(id, convertUserDtoToType(updateUserDto));
   }
 
