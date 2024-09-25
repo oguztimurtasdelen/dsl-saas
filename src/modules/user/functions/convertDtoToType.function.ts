@@ -6,14 +6,15 @@ import { UpdateUserDto } from "../dto/update-user.dto";
 import { Types } from "mongoose";
 
 export function convertUserDtoToType(userDto: RegisterDto | UpdateUserDto): UserType {
+    
     return <UserType>{
         _id: (userDto as UpdateUserDto)._id,
         email: userDto.email,
         password: userDto.password,
-        termsAndConditions: userDto.termsAndConditions || null,
-        isEmailVerified: userDto.isEmailVerified || false,
-        isActive: userDto.isActive || true,
-        profile: new Types.ObjectId( (userDto as UpdateUserDto).profile ) || null
+        termsAndConditions: userDto.termsAndConditions,
+        isEmailVerified: userDto.isEmailVerified,
+        isActive: userDto.isActive,
+        profile: (userDto as UpdateUserDto).profile
     };
 
 }

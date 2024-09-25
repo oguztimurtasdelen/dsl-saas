@@ -6,11 +6,11 @@ import { ProfileType } from "../profile.type";
 export function convertProfileDtoToType(profileDto: CreateProfileDto | UpdateProfileDto): ProfileType {
     return <ProfileType>{
         user: profileDto.user,
-        userRole: profileDto.userRole || UserRole.Athlete,
+        userRole: profileDto.userRole,
         name: profileDto.name,
         surname: profileDto.surname,
-        birthDate: (profileDto as UpdateProfileDto).birthDate || null,
-        avatar: (profileDto as UpdateProfileDto).avatar || null,
-        isActive: (profileDto as UpdateProfileDto).isActive || true
+        birthDate: (profileDto as UpdateProfileDto).birthDate,
+        avatar: (profileDto as UpdateProfileDto).avatar,
+        isActive: (profileDto as UpdateProfileDto).isActive
     }
 }

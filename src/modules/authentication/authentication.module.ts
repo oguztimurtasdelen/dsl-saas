@@ -4,8 +4,6 @@ import { AuthenticationController } from './authentication.controller';
 import { ProfileModule } from '../profile/profile.module';
 import { UserModule } from '../user/user.module';
 
-
-
 @Module({
   imports: [
     ProfileModule,

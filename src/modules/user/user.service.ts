@@ -21,7 +21,6 @@ export class UserService {
   }
 
   async update(id: string, userType: UserType): Promise<User> {
-    console.log(userType)
     return await this.userModel.findByIdAndUpdate(
       id,
       userType,
