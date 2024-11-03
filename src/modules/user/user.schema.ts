@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { TermsAndConditions } from "./dto/termsAndConditions.dto";
+import { TermsAndConditionsDto } from "./dto/termsAndConditions.dto";
 
 @Schema({timestamps: true})
 export class User extends Document {
@@ -12,7 +12,7 @@ export class User extends Document {
     password: string;
 
     @Prop({required: false})
-    termsAndConditions: TermsAndConditions;
+    termsAndConditions: TermsAndConditionsDto;
 
     @Prop({required: true, default: false})
     isEmailVerified: boolean;

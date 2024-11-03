@@ -1,6 +1,5 @@
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty } from "class-validator";
 import { Types } from "mongoose";
-import message from "src/customs/locales/message";
 import { UserRole } from "src/customs/userrole.enum";
 
 export class CreateProfileDto {

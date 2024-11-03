@@ -1,7 +1,7 @@
 import { IsBoolean, IsDate, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsObject, IsOptional, IsPhoneNumber, IsStrongPassword, Matches, Validate, ValidateNested,  } from "class-validator";
 import { Transform, Type } from "class-transformer";
 import { UserRole } from "src/customs/userrole.enum";
-import { TermsAndConditions } from "src/modules/user/dto/termsAndConditions.dto";
+import { TermsAndConditionsDto } from "src/modules/user/dto/termsAndConditions.dto";
 import { IsPasswordValidationMatchConstraint } from "src/customs/validators/isPasswordValidationMatch.validator";
 
 export class RegisterDto {
@@ -34,9 +34,9 @@ export class RegisterDto {
     passwordValidation: string;
 
     @ValidateNested()
-    @Type(()=> TermsAndConditions)
+    @Type(()=> TermsAndConditionsDto)
     @IsObject()
-    termsAndConditions: TermsAndConditions;
+    termsAndConditions: TermsAndConditionsDto;
 
     @IsOptional()
     @IsBoolean({message: 'isEmailVerified is not valid! '})

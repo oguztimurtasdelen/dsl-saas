@@ -1,10 +1,10 @@
 import { UserRole } from "src/customs/userrole.enum";
-import { TermsAndConditions } from "./dto/termsAndConditions.dto";
+import { TermsAndConditionsDto } from "./dto/termsAndConditions.dto";
 
 export type UserType = {
   email: string;
   password: string;
-  termsAndConditions: TermsAndConditions;
+  termsAndConditions: TermsAndConditionsDto;
   isEmailVerified: boolean;
   isActive: boolean;
 };
