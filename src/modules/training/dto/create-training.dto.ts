@@ -15,8 +15,6 @@ export class CreateTrainingDto {
     @Type(() => ReflexTrainingDto)
     trainingProgram: ReflexTrainingDto[];
 
-    trainingResult: ReflexTrainingDto[];
-
     @IsNotEmpty({message: "status cannot be empty!"})
     @IsEnum(TrainingStatus, {message: 'status is not valid'})
     status: TrainingStatus

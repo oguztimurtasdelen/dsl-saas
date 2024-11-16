@@ -20,16 +20,16 @@ export class TrainingController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.trainingService.findOne(+id);
+    return this.trainingService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto) {
-    return this.trainingService.update(+id, updateTrainingDto);
+    return this.trainingService.update(id, convertTrainingDtoToType(updateTrainingDto));
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.trainingService.remove(+id);
+    return this.trainingService.remove(id);
   }
 }

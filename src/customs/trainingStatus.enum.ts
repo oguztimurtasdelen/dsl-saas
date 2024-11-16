@@ -1,6 +1,7 @@
 export enum TrainingStatus {
-    Planned = 'PLANNED', // grey
+    Planned = 'PLANNED', // blue
     InProgress = 'INPROGRESS', // yellow
     Done = 'DONE', // green
-    Broken = 'BROKEN' // red
+    Broken = 'BROKEN', // red
+    Cancelled = 'CANCELLED' //grey
 }

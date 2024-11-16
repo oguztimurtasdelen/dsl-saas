@@ -8,7 +8,6 @@ export function convertTrainingDtoToType(trainingDto: CreateTrainingDto | Update
         profile: trainingDto.profile,
         device: trainingDto.device,
         trainingProgram: trainingDto.trainingProgram,
-        trainingResult: trainingDto.trainingResult,
         status: trainingDto.status
     }
 }
