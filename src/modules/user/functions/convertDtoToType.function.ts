@@ -1,7 +1,7 @@
 import { RegisterDto } from "src/modules/authentication/dto/register.dto";
 import { UserType } from "../user.type";
 import { UserRole } from "src/customs/userrole.enum";
-import { TermsAndConditions } from "../dto/termsAndConditions.dto";
+import { TermsAndConditionsDto } from "../dto/termsAndConditions.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { Types } from "mongoose";
 

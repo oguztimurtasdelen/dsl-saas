@@ -10,8 +10,7 @@ import { UserModule } from './modules/user/user.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { DeviceModule } from "./modules/device/device.module";
 import { AuthenticationModule } from './modules/authentication/authentication.module';
-
-
+import { TrainingModule } from './modules/training/training.module';
 
 
 const chalk = require('chalk');
@@ -25,12 +24,11 @@ const chalk = require('chalk');
     MongooseModule.forRoot(configuration().database.uri, {
       dbName: configuration().database.name
   }),
-
     AuthenticationModule,
     UserModule,
     ProfileModule,
     DeviceModule,
-    
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

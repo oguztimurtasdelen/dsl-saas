@@ -10,9 +10,7 @@ export class DeviceController {
 
   @Post()
   async create(@Body() createDeviceDto: CreateDeviceDto) {
-    const _createdDevice = await this.deviceService.create(convertDeviceDtoToType(createDeviceDto));
-
-    return _createdDevice;
+    return await this.deviceService.create(convertDeviceDtoToType(createDeviceDto));
   }
 
   @Get()

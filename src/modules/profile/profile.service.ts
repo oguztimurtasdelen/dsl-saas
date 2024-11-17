@@ -15,15 +15,7 @@ export class ProfileService {
   ) {}
 
   async createProfile(profileType: ProfileType): Promise<Profile> {    
-    const _userProfile = await this.profileModel.create(<Profile>{
-      user: profileType.user,
-      userRole: profileType.userRole,
-      name: profileType.name,
-      surname: profileType.surname,
-      birthDate: profileType.birthDate,
-      avatar: profileType.avatar,
-      isActive: profileType.isActive
-    });
+    const _userProfile = await this.profileModel.create(profileType);
 
     return _userProfile;
   }
