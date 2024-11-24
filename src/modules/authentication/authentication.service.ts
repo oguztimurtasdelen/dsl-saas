@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { User } from '../user/user.schema';
 import { UserType } from '../user/user.type';
@@ -22,22 +22,21 @@ export class AuthenticationService {
   }
 
   async loginUser(loginDto: LoginDto) {
-    console.log('logindto pass', loginDto.password)
-
     const user = await this.userModel.findOne({email: loginDto.email}).exec();
-    console.log('user-pass from db', user.password)
     if(!user) {
-      console.log('test user bulamadım')
-      return {success: false};
+      throw new HttpException(
+        { success: false, message: 'Invalid password or username' },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     //const isValid = await bcrypt.compare(loginDto.password, user.password);
     if (loginDto.password == user.password ) {
-      console.log('test user bıldum pass doğru')
-
-      return {success: true}
+        return {success: true}
     }else {
-      return {success: false}
-      console.log('test user bıldum pass yanlış')
+      throw new HttpException(
+        { success: false, message: 'Invalid password' },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 
