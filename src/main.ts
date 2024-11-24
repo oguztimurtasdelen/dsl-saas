@@ -15,6 +15,13 @@ async function bootstrap() {
     whitelist: true, // Strips out properties that are not in the DTO
   }));
 
+  app.enableCors({
+    origin: 'http://localhost:8100',
+    methods: ['GET','POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  })
+
   // Swagger - API Doc - localhost:3000/api
   const swaggerEnvironments: Array<string> = ['DEVELOPMENT', 'ACCEPTANCE'];
   if (swaggerEnvironments.includes(configuration().system.environment)) {
