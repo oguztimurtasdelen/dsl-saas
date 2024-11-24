@@ -31,7 +31,7 @@ export class AuthenticationService {
       return {success: false};
     }
     //const isValid = await bcrypt.compare(loginDto.password, user.password);
-    if (loginDto.password = user.password ) {
+    if (loginDto.password == user.password ) {
       console.log('test user bıldum pass doğru')
 
       return {success: true}
