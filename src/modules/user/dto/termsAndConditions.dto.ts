@@ -8,7 +8,7 @@ export class TermsAndConditionsDto {
     termsAndConditions: boolean;
 
     @IsBoolean({message: 'dataProcessing is not valid!'})
-    @Validate(IsRequiredTrueConstraint, {message: 'termsAndConditions must be true!'})
+    @Validate(IsRequiredTrueConstraint, {message: 'dataProcessing must be true!'})
     dataProcessing: boolean;
 
     @IsBoolean({message: 'emailSubscription is not valid!'})
