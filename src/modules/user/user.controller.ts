@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { convertUserDtoToType } from './functions/convertDtoToType.function';
+import { JwtAuthGuard } from 'src/customs/validators/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -13,6 +14,8 @@ export class UserController {
   }
 
   @Get(':id')
+  // To open jwt guard.
+  //@UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne(id);
   }

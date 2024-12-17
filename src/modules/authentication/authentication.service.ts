@@ -4,6 +4,9 @@ import { User } from '../user/user.schema';
 import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
+
+const chalk = require('chalk');
 
 @Injectable()
 export class AuthenticationService {
@@ -13,6 +16,7 @@ export class AuthenticationService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
+    private readonly jwtService: JwtService
   ) {}
 
   async hashPass(openPass: string): Promise<string>{
@@ -44,7 +48,18 @@ export class AuthenticationService {
     const isValidPass = await this.validatePass(loginDto.password, user.password);
 
     if (isValidPass) {
-        return {success: true}
+      console.log( chalk.bgGreen(user.email), chalk.green("login the system."));
+      console.log( chalk.bgRed("______________________________________________________________"));
+      const payload = {
+        userId: user._id,
+        profileId: user.profile,
+        useremail: user.email
+      };
+      
+      return {
+        success: true,
+        access_token: this.jwtService.sign(payload)
+      }
     }else {
       throw new HttpException(
         { success: false, message: 'Invalid password' },
