@@ -19,7 +19,7 @@ async function bootstrap() {
   if (configuration().server.allowed_origins) {
     app.enableCors({
       origin: configuration().server.allowed_origins,
-      methods: 'GET,POST', //Allowed HTTP Methods
+      methods: 'GET,POST,PUT,DELETE', //Allowed HTTP Methods
       allowedHeaders: 'Content-Type, Authorization', // Allowed Headers
     }); 
   }

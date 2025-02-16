@@ -19,11 +19,13 @@ export class AuthenticationService {
     private readonly jwtService: JwtService
   ) {}
 
+  // This function takes a string and returns a hashed string
   async hashPass(openPass: string): Promise<string>{
     const salt = await this.bcrypt.genSalt(10);
     return await this.bcrypt.hash(openPass, salt);
   }
 
+  // This function takes a plain password and a hashed password and returns a boolean
   async validatePass(plainPass: string, hashedPass: string): Promise<boolean>{
     return await this.bcrypt.compare(plainPass, hashedPass);
   }
@@ -37,7 +39,6 @@ export class AuthenticationService {
 
   async loginUser(loginDto: LoginDto) {
     const user = await this.userModel.findOne({email: loginDto.email}).exec();
-
     if(!user) {
       throw new HttpException(
         { success: false, message: 'Invalid password or username' },
