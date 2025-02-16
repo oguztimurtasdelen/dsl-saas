@@ -15,12 +15,14 @@ async function bootstrap() {
     whitelist: true, // Strips out properties that are not in the DTO
   }));
 
-  app.enableCors({
-    origin: 'http://localhost:8100',
-    methods: ['GET','POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  })
+  // CORS Configuration: Only accept requests from the specified origin.
+  if (configuration().server.allowed_origins) {
+    app.enableCors({
+      origin: configuration().server.allowed_origins,
+      methods: 'GET,POST', //Allowed HTTP Methods
+      allowedHeaders: 'Content-Type, Authorization', // Allowed Headers
+    }); 
+  }
 
   // Swagger - API Doc - localhost:3000/api
   const swaggerEnvironments: Array<string> = ['DEVELOPMENT', 'ACCEPTANCE'];
