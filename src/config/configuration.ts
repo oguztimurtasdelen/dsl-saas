@@ -8,7 +8,8 @@ export default () => ({
     },
     server: {
         url: process.env.SERVER_URL,
-        port: parseInt(process.env.PORT, 10) || 3000,
+        port: parseInt(process.env.PORT, 10) || 3000, 
+        allowed_origins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split('###') : null,
     },
     database: <DatabaseConfigModel>{
         type: process.env.DATABASE_TYPE,

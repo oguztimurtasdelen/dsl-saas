@@ -41,7 +41,8 @@ export class AuthenticationController {
 
     const updatedUser: User = await this.userService.update(String(registeredUser._id), convertUserDtoToType(updateUserDto))
     
-    return registeredUser;
+    return {success: true, 
+            registeredUser: registeredUser};
     
   }
 
