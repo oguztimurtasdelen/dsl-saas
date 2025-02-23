@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { SignUpDto } from './dto/signup.dto';
+import { SignInDto } from './dto/signing.dto';
 import { CreateProfileDto } from '../profile/dto/create-profile.dto';
 import { User } from '../user/user.schema';
 import { convertUserDtoToType } from "../user/functions/convertDtoToType.function";
@@ -21,34 +21,34 @@ export class AuthenticationController {
   ) {}
 
   @Post('signup')
-  async register(@Body() registerDto: RegisterDto) {
+  async signup(@Body() signUpDto: SignUpDto) {
     
-    const registeredUser: User = await this.authenticationService.registerUser(convertUserDtoToType(registerDto));
+    const signUpUser: User = await this.authenticationService.signUpUser(convertUserDtoToType(signUpDto));
 
     let profileDto: CreateProfileDto = <CreateProfileDto>{
-      user: registeredUser._id,
-      userRole: registerDto.userRole,
-      name: registerDto.name,
-      surname: registerDto.surname
+      user: signUpUser._id,
+      userRole: signUpDto.userRole,
+      name: signUpDto.name,
+      surname: signUpDto.surname
     };
 
-    const registeredUserProfile: Profile = await this.profileService.createProfile(convertProfileDtoToType(profileDto));
+    const signUpUserProfile: Profile = await this.profileService.createProfile(convertProfileDtoToType(profileDto));
 
     let updateUserDto: UpdateUserDto = <UpdateUserDto>{
-      _id: registeredUser._id,
-      profile: registeredUserProfile._id
+      _id: signUpUser._id,
+      profile: signUpUserProfile._id
     };
 
-    const updatedUser: User = await this.userService.update(String(registeredUser._id), convertUserDtoToType(updateUserDto))
+    const updatedUser: User = await this.userService.update(String(signUpUser._id), convertUserDtoToType(updateUserDto))
     
     return {success: true, 
-            registeredUser: registeredUser};
+            signUpUser: signUpUser};
     
   }
 
   @Post('signin')
-  login(@Body() loginDto: LoginDto) {
-    return this.authenticationService.loginUser(loginDto)
+  signin(@Body() signInDto: SignInDto) {
+    return this.authenticationService.signInUser(signInDto)
   }
 
   @Get()

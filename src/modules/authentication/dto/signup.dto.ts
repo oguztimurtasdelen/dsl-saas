@@ -4,7 +4,7 @@ import { UserRole } from "src/customs/userrole.enum";
 import { TermsAndConditionsDto } from "src/modules/user/dto/termsAndConditions.dto";
 import { IsPasswordValidationMatchConstraint } from "src/customs/validators/isPasswordValidationMatch.validator";
 
-export class RegisterDto {
+export class SignUpDto {
     @IsNotEmpty({message: 'userRole cannot be empty!'})
     @IsEnum(UserRole, {message: 'userRole is not valid!'})
     userRole: UserRole;
