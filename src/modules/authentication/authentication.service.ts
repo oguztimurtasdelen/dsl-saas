@@ -5,6 +5,7 @@ import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
+import { SignInResponseInterface } from 'src/common/signin-response.interface';
 
 const chalk = require('chalk');
 
@@ -12,6 +13,7 @@ const chalk = require('chalk');
 export class AuthenticationService {
   private bcrypt = require('bcrypt');
   private readonly saltRounds = 10; // Cost Factor to iterate
+  private 
 
   constructor(
     @InjectModel(User.name)
@@ -40,8 +42,11 @@ export class AuthenticationService {
   async signInUser(signInDto: SignInDto) {
     const user = await this.userModel.findOne({email: signInDto.email}).exec();
     if(!user) {
+      
       throw new HttpException(
         { success: false, message: 'Invalid password or username' },
+       
+        
         HttpStatus.UNAUTHORIZED,
       );
     }
