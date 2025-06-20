@@ -5,19 +5,26 @@ import { TermsAndConditionsDto } from "src/modules/user/dto/termsAndConditions.d
 import { IsPasswordValidationMatchConstraint } from "src/customs/validators/isPasswordValidationMatch.validator";
 
 export class SignUpDto {
-    @IsNotEmpty({message: 'userRole cannot be empty!'})
-    @IsEnum(UserRole, {message: 'userRole is not valid!'})
+    @IsNotEmpty({message: 'User Role cannot be empty!'})
+    @IsEnum(UserRole, {message: 'User Role is not valid!'})
     userRole: UserRole;
 
-    @IsNotEmpty({message: 'name cannot be empty!'})
+    @IsNotEmpty({message: 'Name cannot be empty!'})
     name: string ;
 
-    @IsNotEmpty({message: 'surname cannot be empty!'})
+    @IsNotEmpty({message: 'Surname cannot be empty!'})
     surname: string;
 
-    @IsNotEmpty({message: 'email cannot be empty!'})
+    @IsNotEmpty({message: 'Email cannot be empty!'})
     @IsEmail({}, {message: 'email is not valid!'})
     email: string;
+
+    @IsNotEmpty({message: 'birthDate cannot be empty!'})
+    @IsDateString({}, {message: 'birthDate is not valid!'})
+    birthDate: string;
+
+    @IsOptional()
+    avatar: string;
 
     @IsNotEmpty({message: 'Password cannot be empty!'})
     @IsStrongPassword({
@@ -26,10 +33,10 @@ export class SignUpDto {
         minNumbers: 1,
         minSymbols: 0
     }, 
-    {message: 'password not strong enough! minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 0'})
+    {message: 'Password is not strong enough! minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 0'})
     password: string;
 
-    @IsNotEmpty({message: 'passwordValidation cannot be empty!'})
+    @IsNotEmpty({message: 'Password Validation cannot be empty!'})
     @Validate(IsPasswordValidationMatchConstraint, {message: 'passwordValidation is not match with password'})
     passwordValidation: string;
 
@@ -39,10 +46,10 @@ export class SignUpDto {
     termsAndConditions: TermsAndConditionsDto;
 
     @IsOptional()
-    @IsBoolean({message: 'isEmailVerified is not valid! '})
+    @IsBoolean({message: 'Email Verification is not valid! '})
     isEmailVerified: boolean;
 
     @IsOptional()
-    @IsBoolean({message: 'isActive is not valid!'})
+    @IsBoolean({message: 'isActive value is not valid!'})
     isActive: boolean;
 }

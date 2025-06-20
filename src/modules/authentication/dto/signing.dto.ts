@@ -1,13 +1,12 @@
-import { IsEmail, IsEnum, IsNotEmpty } from "class-validator";
-import { UserRole } from "src/customs/userrole.enum";
+import { IsEmail, IsNotEmpty } from "class-validator";
 
 
 export class SignInDto {
-    @IsNotEmpty({message: 'email cannot be empty!'})
-    @IsEmail({}, {message: 'email is not valid!'})
+    @IsNotEmpty({message: 'Email cannot be empty!'})
+    @IsEmail({}, {message: 'Email is not valid!'})
     email: string;
 
-    @IsNotEmpty({message: 'password cannot be empty!'})
+    @IsNotEmpty({message: 'Password cannot be empty!'})
     password: string;
 
 }

@@ -3,7 +3,7 @@ import { DatabaseConfigModel } from "src/modules/database/config.model";
 
 export default () => ({
     system: {
-        environment: process.env.ENVIRONMENT || 'DEV',
+        environment: process.env.ENVIRONMENT || 'DEVELOPMENT',
         app_version: process.env.APPVERSION, 
     },
     server: {

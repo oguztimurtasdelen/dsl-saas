@@ -6,15 +6,24 @@ import { DeviceStatus } from "src/customs/deviceStatus.enum";
 export class Device extends Document {
 
     @Prop({
-        unique: false, // switch true on prod
-        required: true
+        unique: true,
+        required: true,
+        type: String,
+        match: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/ // Regex for MAC address format
     })
     macAddress: string;
 
-    @Prop({required: true})
+    @Prop({
+        unique: true,
+        required: true,
+        type: String
+    })
     deviceCode: string;
 
-    @Prop({required: true})
+    @Prop({
+        required: true,
+        type: String,
+    })
     deviceName: string;
 
     @Prop({
@@ -23,9 +32,12 @@ export class Device extends Document {
         enum: DeviceStatus,
         default: DeviceStatus.Offline
     })
-    status: DeviceStatus
+    status: DeviceStatus;
 
-    @Prop({required: false})
+    @Prop({
+        required: false, 
+        type: String
+    })
     description: string;
 }
 

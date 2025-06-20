@@ -12,10 +12,9 @@ export class DeviceService {
     private readonly deviceModel: Model<Device>
   ) {}
 
-  async create(deviceType: DeviceType): Promise<Device> {
-    const _device = await this.deviceModel.create(deviceType);
 
-    return _device;
+  async create(deviceType: DeviceType): Promise<Device> {
+    return await this.deviceModel.create(deviceType);
   }
 
   async findAll(): Promise<Device[]> {
@@ -31,8 +30,8 @@ export class DeviceService {
       id, 
       deviceType,
       {
-        new: true, // Return updated data
-        runValidators: true
+        new: true, // Returns updated data
+        runValidators: true,
       }
     ); 
   }

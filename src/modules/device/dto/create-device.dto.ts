@@ -3,18 +3,18 @@ import { DeviceStatus } from "src/customs/deviceStatus.enum";
 
 export class CreateDeviceDto {
 
-    @IsNotEmpty({message: "macAddress cannot be empty!"})
-    @IsMACAddress({message: "macAddress is not valid!"})
+    @IsNotEmpty({message: "MAC Address cannot be empty!"})
+    @IsMACAddress({message: "MAC Address is not valid!"})
     macAddress : string;
 
-    @IsNotEmpty({message: "deviceCode cannot be empty!"})
+    @IsNotEmpty({message: "Device Code cannot be empty!"})
     deviceCode: string;
 
-    @IsNotEmpty({message: "deviceName cannot be empty!"})
-    deviceName : string;
+    @IsNotEmpty({message: "Device Name cannot be empty!"})
+    deviceName: string;
 
-    @IsNotEmpty({message: "status cannot be empty!"})
-    @IsEnum(DeviceStatus, {message: 'status is not valid!'})
+    @IsNotEmpty({message: "Status cannot be empty!"})
+    @IsEnum(DeviceStatus, {message: 'Status is not valid!'})
     status: DeviceStatus
 
     description : string;

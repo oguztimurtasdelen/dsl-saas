@@ -5,7 +5,7 @@ import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
-import { SignInResponseInterface } from 'src/common/signin-response.interface';
+import { SignInReturnDto } from './dto/signin-return.dto';
 
 const chalk = require('chalk');
 
@@ -13,7 +13,6 @@ const chalk = require('chalk');
 export class AuthenticationService {
   private bcrypt = require('bcrypt');
   private readonly saltRounds = 10; // Cost Factor to iterate
-  private 
 
   constructor(
     @InjectModel(User.name)
@@ -23,7 +22,7 @@ export class AuthenticationService {
 
   // This function takes a string and returns a hashed string
   async hashPass(openPass: string): Promise<string>{
-    const salt = await this.bcrypt.genSalt(10);
+    const salt = await this.bcrypt.genSalt(this.saltRounds);
     return await this.bcrypt.hash(openPass, salt);
   }
 
@@ -33,45 +32,64 @@ export class AuthenticationService {
   }
 
   async signUpUser(userType: UserType): Promise<User> {
-    // this hash create or update can be moved in model via built in pre hook 
+    // Check if user already exists
+    const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
+    if (existingUser) {
+      throw new HttpException(
+        { success: false, message: 'User already exists!' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // If user does not exist, create a new user
     userType.password = await this.hashPass(userType.password);
     const _user = await this.userModel.create(userType);
+
     return _user;
   }
 
   async signInUser(signInDto: SignInDto) {
-    const user = await this.userModel.findOne({email: signInDto.email}).exec();
-    if(!user) {
-      
+    const _user = await this.userModel.findOne({email: signInDto.email}).populate('profile').exec();
+
+    if(!_user) {
       throw new HttpException(
-        { success: false, message: 'Invalid password or username' },
-       
-        
+        { success: false, message: 'Invalid password or username!' },
         HttpStatus.UNAUTHORIZED,
       );
     }
 
-    const isValidPass = await this.validatePass(signInDto.password, user.password);
+    if (!_user.isEmailVerified) {
+      throw new HttpException(
+        { success: false, message: 'Email is not verified yet!' },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
 
-    if (isValidPass) {
-      console.log( chalk.bgGreen(user.email), chalk.green("sign in the system."));
-      console.log( chalk.bgRed("______________________________________________________________"));
-      const payload = {
-        userId: user._id,
-        profileId: user.profile,
-        useremail: user.email
-      };
-      
-      return {
-        success: true,
-        access_token: this.jwtService.sign(payload)
-      }
-    }else {
+    const isPasswordValid = await this.validatePass(signInDto.password, _user.password);
+    if (!isPasswordValid) {
       throw new HttpException(
         { success: false, message: 'Invalid password' },
         HttpStatus.UNAUTHORIZED,
       );
     }
+
+    console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
+    console.log( chalk.bgRed("______________________________________________________________"));
+
+    // Create JWT token
+    // The payload can contain any data you want to include in the token
+    const payload = {
+      userId: _user._id,
+      useremail: _user.email
+    };
+    const accessToken = this.jwtService.sign(payload);
+    
+    return <SignInReturnDto>({
+      success: true,
+      message: 'User signed in successfully!',
+      token: accessToken,
+      user: _user
+    });
   }
 
   async findAll() {

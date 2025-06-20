@@ -11,7 +11,7 @@ import { JwtStrategy } from 'src/customs/validators/jwt.strategy';
     ProfileModule,
     UserModule,
     JwtModule.register({
-      secret: 'your-secret-key',
+      secret: process.env.JWT_SECRET_KEY || 'dsl_jwt_secret_key',
       signOptions: {expiresIn: '1h'},
     }),
     

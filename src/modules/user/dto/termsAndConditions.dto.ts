@@ -3,14 +3,14 @@ import { IsRequiredTrueConstraint } from "src/customs/validators/isRequiredTrue.
 
 
 export class TermsAndConditionsDto {
-    @IsBoolean({message: 'termsAndConditions is not valid!'})
-    @Validate(IsRequiredTrueConstraint, {message: 'termsAndConditions must be true!'})
+    @IsBoolean({message: 'Terms And Conditions is not valid!'})
+    @Validate(IsRequiredTrueConstraint, {message: 'Terms and Conditions must be true!'})
     termsAndConditions: boolean;
 
-    @IsBoolean({message: 'dataProcessing is not valid!'})
-    @Validate(IsRequiredTrueConstraint, {message: 'dataProcessing must be true!'})
+    @IsBoolean({message: 'Data Processing is not valid!'})
+    @Validate(IsRequiredTrueConstraint, {message: 'Data Processing must be true!'})
     dataProcessing: boolean;
 
-    @IsBoolean({message: 'emailSubscription is not valid!'})
+    @IsBoolean({message: 'Email Subscription is not valid!'})
     emailSubscription: boolean;
 }

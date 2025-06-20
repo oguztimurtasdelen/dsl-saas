@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TrainingService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
-import { convertTrainingDtoToType } from './functions/convertDtoToType.function';
+import { convertTrainingDtoToType } from './functions/training.function';
 
 @Controller('training')
 export class TrainingController {

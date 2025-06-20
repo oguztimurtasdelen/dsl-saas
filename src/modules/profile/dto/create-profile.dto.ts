@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsEnum, IsNotEmpty } from "class-validator";
+import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsOptional } from "class-validator";
 import { Types } from "mongoose";
 import { UserRole } from "src/customs/userrole.enum";
 
@@ -15,6 +15,13 @@ export class CreateProfileDto {
     
     @IsNotEmpty({message: 'surname cannot be empty!'})
     surname : string;
+
+    @IsNotEmpty({message: 'birthDate cannot be empty!'})
+    @IsDateString({}, {message: 'birthDate is not valid!'})
+    birthDate: string;
+
+    @IsOptional()
+    avatar: string;
 
     @IsNotEmpty({message: 'isActive cannot be empty!'})
     @IsBoolean({message: 'isActive is not valid!'})
