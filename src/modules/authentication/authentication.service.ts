@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
+import { Profile } from '../profile/profile.schema';
 
 const chalk = require('chalk');
 
@@ -40,18 +41,19 @@ export class AuthenticationService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    
     // If user does not exist, create a new user
     userType.password = await this.hashPass(userType.password);
     const _user = await this.userModel.create(userType);
 
     return _user;
+    
   }
 
   async signInUser(signInDto: SignInDto) {
-    const _user = await this.userModel.findOne({email: signInDto.email}).populate('profile').exec();
-
-    if(!_user) {
+    const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').exec() as unknown as User & { profile: Profile };
+    const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
+    if(!_user || !isPasswordValid) {
       throw new HttpException(
         { success: false, message: 'Invalid password or username!' },
         HttpStatus.UNAUTHORIZED,
@@ -65,14 +67,6 @@ export class AuthenticationService {
       );
     }
 
-    const isPasswordValid = await this.validatePass(signInDto.password, _user.password);
-    if (!isPasswordValid) {
-      throw new HttpException(
-        { success: false, message: 'Invalid password' },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
     console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
     console.log( chalk.bgRed("______________________________________________________________"));
 
@@ -80,15 +74,25 @@ export class AuthenticationService {
     // The payload can contain any data you want to include in the token
     const payload = {
       userId: _user._id,
-      useremail: _user.email
+      userEmail: _user.email
     };
     const accessToken = this.jwtService.sign(payload);
-    
+
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
       token: accessToken,
-      user: _user
+      user: {
+        _id: _user._id,
+        name: _user.name,
+        surname: _user.surname,
+        profile: {
+          _id: _user.profile._id,
+          user: _user.profile.user,
+          avatar: _user.profile.avatar,
+          isActive: _user.profile.isActive
+        }
+      }
     });
   }
 

@@ -1,15 +1,43 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { TermsAndConditionsDto } from "./dto/termsAndConditions.dto";
+import { UserRoleEnum } from "src/customs/utils/userrole.enum";
+import { UserTypeEnum } from "src/customs/utils/usertype.enum";
+import { Profile } from "../profile/profile.schema";
+
 
 @Schema({timestamps: true})
 export class User extends Document {
+
+    @Prop({required: true})
+    _id: Types.ObjectId;
+
+    @Prop({unique: true, ref: 'Profile'})
+    profile: Types.ObjectId;
 
     @Prop({unique: true, required: true})
     email: string;
 
     @Prop({required: true})
     password: string;
+
+    @Prop({required: true, enum: UserRoleEnum, default: UserRoleEnum.User})
+    userRole: string;
+
+    @Prop({required: true, enum: UserTypeEnum, default: UserTypeEnum.Athlete})
+    userType: string;
+
+    @Prop({required: true})
+    name: string;
+
+    @Prop({required: true})
+    surname: string;
+
+    @Prop({required: true})
+    birthDate: string;
+
+    @Prop({required: true})
+    phoneNumber: string;
 
     @Prop({required: false})
     termsAndConditions: TermsAndConditionsDto;
@@ -20,8 +48,6 @@ export class User extends Document {
     @Prop({required: true, default: true})
     isActive: boolean;
 
-    @Prop({unique: true, ref: 'Profile'})
-    profile: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

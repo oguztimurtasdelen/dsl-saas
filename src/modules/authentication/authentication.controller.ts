@@ -4,9 +4,9 @@ import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signing.dto';
 import { CreateProfileDto } from '../profile/dto/create-profile.dto';
 import { User } from '../user/user.schema';
-import { convertUserDtoToType } from "../user/functions/user.function";
+import * as userFunction from "../user/functions/user.function";
 import { ProfileService } from '../profile/profile.service';
-import { convertProfileDtoToType, createProfileDto } from '../profile/functions/profile.function';
+import * as profileFunction from '../profile/functions/profile.function';
 import { Profile } from '../profile/profile.schema';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { UserService } from '../user/user.service';
@@ -25,19 +25,13 @@ export class AuthenticationController {
 
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto) {
-    const userType: UserType = convertUserDtoToType(signUpDto);
+    const userType: UserType = userFunction.convertUserDtoToType(signUpDto);
     const signedUpUser: User = await this.authenticationService.signUpUser(userType);
 
-    let profileDto: CreateProfileDto = createProfileDto({signUpDto: signUpDto, _user: signedUpUser});
-    const profileType: ProfileType = convertProfileDtoToType(profileDto);
+    
+    let profileDto: CreateProfileDto = profileFunction.createProfileDto(signedUpUser);
+    const profileType: ProfileType = profileFunction.convertProfileDtoToType(profileDto);
     const signedUpUserProfile: Profile = await this.profileService.createProfile(profileType);
-
-    let updateUserDto: UpdateUserDto = <UpdateUserDto>{
-      _id: signedUpUser._id,
-      profile: signedUpUserProfile._id
-    };
-
-    const updatedUser: User = await this.userService.update(String(signedUpUser._id), convertUserDtoToType(updateUserDto))
     
     return <SignUpReturnDto>{
       success: true,

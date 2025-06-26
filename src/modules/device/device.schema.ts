@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { DeviceStatus } from "src/customs/deviceStatus.enum";
+import { DeviceStatusEnum } from "src/customs/utils/deviceStatus.enum";
 
 @Schema({timestamps: true})
 export class Device extends Document {
@@ -29,10 +29,10 @@ export class Device extends Document {
     @Prop({
         required: true,
         type: String,
-        enum: DeviceStatus,
-        default: DeviceStatus.Offline
+        enum: DeviceStatusEnum,
+        default: DeviceStatusEnum.Offline
     })
-    status: DeviceStatus;
+    status: DeviceStatusEnum;
 
     @Prop({
         required: false, 

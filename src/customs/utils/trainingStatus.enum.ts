@@ -1,4 +1,4 @@
-export enum TrainingStatus {
+export enum TrainingStatusEnum {
     Planned = 'PLANNED', // blue
     InProgress = 'INPROGRESS', // yellow
     Done = 'DONE', // green

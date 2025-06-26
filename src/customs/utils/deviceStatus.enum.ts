@@ -1,4 +1,4 @@
-export enum DeviceStatus {
+export enum DeviceStatusEnum {
     Offline = 'OFFLINE', // grey
     Available = 'AVAILABLE', // green
     Busy = 'BUSY', // yellow

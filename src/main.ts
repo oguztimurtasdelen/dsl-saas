@@ -34,8 +34,13 @@ async function bootstrap() {
       .build();
     const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, swaggerDocument);
+
+    console.log(chalk.green("----> Swagger API Documentation is available at:"),
+                chalk.green.underline.bold(configuration().server.url + (configuration().server.port || 3000) + '/api'));
   }
-  console.log(chalk.cyan("----> The application up on port:"),
+
+  // Start the application
+  console.log(chalk.cyan("----> Dynamic Sports Lab service application is up on port:"),
               chalk.cyan.underline.bold(configuration().server.port || 3000));
   await app.listen(configuration().server.port || 3000);
 }

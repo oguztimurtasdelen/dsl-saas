@@ -1,5 +1,5 @@
 import { IsMACAddress, IsNotEmpty, IsEnum } from "class-validator";
-import { DeviceStatus } from "src/customs/deviceStatus.enum";
+import { DeviceStatusEnum } from "src/customs/utils/deviceStatus.enum";
 
 export class CreateDeviceDto {
 
@@ -14,8 +14,8 @@ export class CreateDeviceDto {
     deviceName: string;
 
     @IsNotEmpty({message: "Status cannot be empty!"})
-    @IsEnum(DeviceStatus, {message: 'Status is not valid!'})
-    status: DeviceStatus
+    @IsEnum(DeviceStatusEnum, {message: 'Status is not valid!'})
+    status: DeviceStatusEnum
 
     description : string;
      

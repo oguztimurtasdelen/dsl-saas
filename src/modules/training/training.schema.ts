@@ -3,7 +3,7 @@ import { Document, Types } from "mongoose";
 import { Device } from "../device/device.schema";
 import { Profile } from "../profile/profile.schema";
 import { ReflexTrainingDto } from "./dto/reflex-training.dto";
-import { TrainingStatus } from "src/customs/trainingStatus.enum";
+import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
 
 @Schema({timestamps: true})
 export class Training extends Document {
@@ -18,10 +18,10 @@ export class Training extends Document {
         unique: false, 
         required: true, 
         type: String, 
-        enum: TrainingStatus, 
-        default: TrainingStatus.Planned
+        enum: TrainingStatusEnum, 
+        default: TrainingStatusEnum.Planned
     })
-    status: TrainingStatus
+    status: TrainingStatusEnum
 
 
 
