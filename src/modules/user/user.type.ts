@@ -20,7 +20,3 @@ export type UserType = {
   isEmailVerified: boolean;
   isActive: boolean;
 };
-
-export type UserWithProfileType  = User & {
-  profile:  Profile;
-}

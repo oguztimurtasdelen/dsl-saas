@@ -49,12 +49,10 @@ export class AuthenticationService {
     const _user = await this.userModel.create(userType);
 
     return _user;
-    
   }
 
   async signInUser(signInDto: SignInDto) {
     const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').lean().exec() as unknown as User & { profile: Profile };
-
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
     if(!_user || !isPasswordValid) {
       throw new HttpException(
@@ -80,20 +78,22 @@ export class AuthenticationService {
       userEmail: _user.email
     };
     const accessToken = this.jwtService.sign(payload);
-
-
-
-
-  
-    
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
       token: accessToken,
-      user: _user
-      
+      user: {
+        _id: _user._id,
+        name: _user.name,
+        surname: _user.surname,
+        profile: {
+          _id: _user.profile._id,
+          user: _user.profile.user,
+          avatar: _user.profile.avatar,
+          isActive: _user.profile.isActive
+        }
+      }
     });
-    
   }
 
   async findAll() {
