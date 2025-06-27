@@ -84,31 +84,16 @@ export class AuthenticationService {
 
 
 
-    return {
+  
+    
+    return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
       token: accessToken,
       user: _user
       
-    };
-    /*
-    return <SignInReturnDto>({
-      success: true,
-      message: 'User signed in successfully!',
-      token: accessToken,
-      user: {
-        _id: _user._id,
-        name: _user.name,
-        surname: _user.surname,
-        profile: {
-          _id: _user.profile._id,
-          user: _user.profile.user,
-          avatar: _user.profile.avatar,
-          isActive: _user.profile.isActive
-        }
-      }
     });
-    */
+    
   }
 
   async findAll() {

@@ -7,7 +7,7 @@ export class SignInReturnDto {
   success: boolean;
   message: string;
   token?: string; // Optional, if you want to return a JWT token or similar
-  user?: SignInReturnUserDto; // Optional, if you want to include user information
+  user?: User & {profile: Profile} //SignInReturnUserDto; // Optional, if you want to include user information
 }
 
 export class SignInReturnUserDto {
