@@ -7,6 +7,8 @@ import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
 import { Profile } from '../profile/profile.schema';
+import { Document } from "mongoose";
+
 
 const chalk = require('chalk');
 
@@ -51,7 +53,8 @@ export class AuthenticationService {
   }
 
   async signInUser(signInDto: SignInDto) {
-    const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').exec() as unknown as User & { profile: Profile };
+    const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').lean().exec() as unknown as User & { profile: Profile };
+
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
     if(!_user || !isPasswordValid) {
       throw new HttpException(
@@ -78,6 +81,17 @@ export class AuthenticationService {
     };
     const accessToken = this.jwtService.sign(payload);
 
+
+
+
+    return {
+      success: true,
+      message: 'User signed in successfully!',
+      token: accessToken,
+      user: _user
+      
+    };
+    /*
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
@@ -94,6 +108,7 @@ export class AuthenticationService {
         }
       }
     });
+    */
   }
 
   async findAll() {
