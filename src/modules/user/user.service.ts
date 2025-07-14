@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './user.schema';
 import { UserType } from './user.type';
+import { ProfileService } from '../profile/profile.service';
 
 @Injectable()
 export class UserService {
@@ -16,13 +17,14 @@ export class UserService {
     return this.userModel.find().populate('profile').exec();
   }
 
-  async findOne(id: string): Promise<User> {
-    return this.userModel.findById(id).populate('profile').exec();
+  async findOne(userId: string): Promise<User | String> {
+    //return new Types.ObjectId(id).toString(); 
+    return this.userModel.findById(userId).populate('profile').exec();
   }
 
-  async update(id: string, userType: UserType): Promise<User> {
+  async update(userId: string, userType: UserType): Promise<User> {
     return await this.userModel.findByIdAndUpdate(
-      id,
+      userId,
       userType,
       {
         new: true,
@@ -31,7 +33,7 @@ export class UserService {
     );
   }
 
-  async remove(id: string) {
-    return await this.userModel.findByIdAndDelete(id);
+  async remove(userId: string) {
+    return await this.userModel.findByIdAndDelete(userId);
   }
 }

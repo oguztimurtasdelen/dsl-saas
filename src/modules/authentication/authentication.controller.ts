@@ -20,7 +20,6 @@ export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
     private readonly profileService: ProfileService,
-    private readonly userService: UserService
   ) {}
 
   @Post('signup')
@@ -28,7 +27,7 @@ export class AuthenticationController {
     const userType: UserType = userFunction.convertUserDtoToType(signUpDto);
     const signedUpUser: User = await this.authenticationService.signUpUser(userType);
 
-    
+
     let profileDto: CreateProfileDto = profileFunction.createProfileDto(signedUpUser);
     const profileType: ProfileType = profileFunction.convertProfileDtoToType(profileDto);
     const signedUpUserProfile: Profile = await this.profileService.createProfile(profileType);

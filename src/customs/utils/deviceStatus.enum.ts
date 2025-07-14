@@ -3,5 +3,6 @@ export enum DeviceStatusEnum {
     Available = 'AVAILABLE', // green
     Busy = 'BUSY', // yellow
     Broken = 'BROKEN', // red
-    OnUpdate = 'ON_UPDATE' // blue
+    OnUpdate = 'ON_UPDATE', //blue
+    OnSetup = 'ON_SETUP' // orange
 }

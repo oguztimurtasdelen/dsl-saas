@@ -9,8 +9,7 @@ import { Types } from "mongoose";
 export function convertUserDtoToType(userDto: SignUpDto | UpdateUserDto): UserType {
     
     return <UserType>{
-        _id: (userDto as UpdateUserDto)._id ? (userDto as UpdateUserDto)._id : new Types.ObjectId(),
-        profile: (userDto as UpdateUserDto).profile ? (userDto as UpdateUserDto).profile : new Types.ObjectId(),
+        profile: (userDto as UpdateUserDto).profile,
         email: userDto.email,
         password: userDto.password,
         userRole: UserRoleEnum[userDto.userRole],
@@ -20,8 +19,8 @@ export function convertUserDtoToType(userDto: SignUpDto | UpdateUserDto): UserTy
         birthDate: userDto.birthDate,
         phoneNumber: userDto.phoneNumber,
         termsAndConditions: userDto.termsAndConditions,
-        isEmailVerified: userDto.isEmailVerified ? userDto.isEmailVerified : false,
-        isActive: userDto.isActive ? userDto.isActive : true
+        isEmailVerified: userDto.isEmailVerified,           
+        isActive: userDto.isActive
     };
 
 }

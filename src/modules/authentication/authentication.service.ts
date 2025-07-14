@@ -47,7 +47,6 @@ export class AuthenticationService {
     // If user does not exist, create a new user
     userType.password = await this.hashPass(userType.password);
     const _user = await this.userModel.create(userType);
-
     return _user;
   }
 

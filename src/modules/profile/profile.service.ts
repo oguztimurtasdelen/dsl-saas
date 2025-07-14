@@ -25,12 +25,12 @@ export class ProfileService {
   }
 
   async findOne(profileId: string): Promise<Profile> {
-    return await this.profileModel.findById(profileId).populate('user').exec();
+    return await this.profileModel.findById( profileId ).populate('user').exec();
   }
 
-  async update(id: string, profileType: ProfileType) {
+  async update(profileId: string, profileType: ProfileType) {
     return await this.profileModel.findByIdAndUpdate(
-      id,
+      profileId,
       profileType,
       {
         new: true,
@@ -39,7 +39,7 @@ export class ProfileService {
     );
   }
 
-  async remove(id: string) {
-    return await this.profileModel.findByIdAndDelete(id);
+  async remove(profileId: string) {
+    return await this.profileModel.findByIdAndDelete(profileId);
   }
 }

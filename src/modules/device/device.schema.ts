@@ -35,6 +35,12 @@ export class Device extends Document {
     status: DeviceStatusEnum;
 
     @Prop({
+        required: false,
+        type: String
+    })
+    firmwareVersion: string;
+
+    @Prop({
         required: false, 
         type: String
     })

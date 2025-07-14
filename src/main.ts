@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
+import mongoose from 'mongoose';
 
 const chalk = require('chalk');
 
@@ -43,5 +44,7 @@ async function bootstrap() {
   console.log(chalk.cyan("----> Dynamic Sports Lab service application is up on port:"),
               chalk.cyan.underline.bold(configuration().server.port || 3000));
   await app.listen(configuration().server.port || 3000);
+
+ 
 }
 bootstrap();

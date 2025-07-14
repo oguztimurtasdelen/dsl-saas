@@ -3,5 +3,6 @@ export type DeviceType = {
     deviceCode: string;
     deviceName: string;
     status: string;
+    firmwareVersion: string;
     description: string;
 }

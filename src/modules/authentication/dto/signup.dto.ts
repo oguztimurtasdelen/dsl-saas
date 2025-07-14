@@ -16,7 +16,8 @@ export class SignUpDto {
     @IsEmail({}, {message: 'email is not valid!'})
     email: string;
 
-    @IsNotEmpty({message: 'Phone Number cannot be empty!'})
+    //@IsNotEmpty({message: 'Phone Number cannot be empty!'}) // Needed for Two-Way Authentication
+    @IsOptional()
     @IsPhoneNumber("TR", {message: 'Phone number is not valid! example: +905555555555'})
     phoneNumber: string;
 

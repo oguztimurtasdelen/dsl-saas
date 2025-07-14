@@ -8,6 +8,7 @@ export function convertDeviceDtoToType(deviceDto: CreateDeviceDto | UpdateDevice
         deviceCode: deviceDto.deviceCode,
         deviceName: deviceDto.deviceName,
         status: deviceDto.status,
-        description: deviceDto.description
+        firmwareVersion: deviceDto.firmwareVersion,
+        description: deviceDto.description,
     }
 }

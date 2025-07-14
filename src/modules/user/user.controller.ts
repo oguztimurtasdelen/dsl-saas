@@ -3,10 +3,15 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { convertUserDtoToType } from './functions/user.function';
 import { JwtAuthGuard } from 'src/customs/validators/jwt-auth.guard';
+import { ProfileService } from '../profile/profile.service';
+import { User } from './user.schema';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly profileService: ProfileService,
+  ) {}
 
   @Get()
   async findAll() {
@@ -27,6 +32,8 @@ export class UserController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.userService.remove(id);
+    const _user: User = await this.userService.remove(id);
+    await this.profileService.remove(_user.profile.toString());
+    return;
   }
 }
