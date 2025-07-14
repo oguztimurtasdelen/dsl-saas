@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
 import { TrainingService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
-import { convertTrainingDtoToType } from './functions/training.function';
+import { TrainingType } from './training.type';
+import * as trainingFunction from './functions/training.function';
 
 @Controller('training')
 export class TrainingController {
@@ -10,7 +11,8 @@ export class TrainingController {
 
   @Post()
   async create(@Body() createTrainingDto: CreateTrainingDto) {
-    return await this.trainingService.create(convertTrainingDtoToType(createTrainingDto));
+    const trainingType: TrainingType = trainingFunction.convertTrainingDtoToType(createTrainingDto);
+    return await this.trainingService.create(trainingType);
   }
 
   @Get()
@@ -23,9 +25,11 @@ export class TrainingController {
     return this.trainingService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto) {
-    return this.trainingService.update(id, convertTrainingDtoToType(updateTrainingDto));
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto) {
+    const trainingType: TrainingType = trainingFunction.convertTrainingDtoToType(updateTrainingDto);
+    console.log(trainingType)
+    return this.trainingService.update(id, trainingType);
   }
 
   @Delete(':id')

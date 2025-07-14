@@ -27,7 +27,7 @@ export class DeviceController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    const deviceType = deviceFunction.convertDeviceDtoToType(updateDeviceDto);
+    const deviceType: DeviceType = deviceFunction.convertDeviceDtoToType(updateDeviceDto);
     return await this.deviceService.update(id, deviceType);
   }
 

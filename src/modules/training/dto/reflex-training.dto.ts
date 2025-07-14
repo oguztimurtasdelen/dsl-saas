@@ -7,6 +7,9 @@ export class ReflexTrainingDto {
     @IsNotEmpty({message: 'duration cannot be empty!'})
     duration: number;
     
+    @IsOptional()
+    actionTime: number;
+
     @IsBoolean({message: 'isSuccess is not valid!'})
     @IsOptional()
     isSuccess: boolean;
