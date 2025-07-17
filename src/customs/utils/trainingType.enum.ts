@@ -1,3 +1,3 @@
 export enum TrainingTypeEnum {
-    Reflex = 'REFLEX'
+    REFLEX = 'REFLEX'
 }

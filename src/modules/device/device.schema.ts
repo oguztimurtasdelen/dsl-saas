@@ -30,7 +30,7 @@ export class Device extends Document {
         required: true,
         type: String,
         enum: DeviceStatusEnum,
-        default: DeviceStatusEnum.Offline
+        default: DeviceStatusEnum.OFFLINE
     })
     status: DeviceStatusEnum;
 

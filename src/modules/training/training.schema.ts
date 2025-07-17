@@ -20,7 +20,7 @@ export class Training extends Document {
         required: true, 
         type: String, 
         enum: TrainingTypeEnum, 
-        default: TrainingTypeEnum.Reflex
+        default: TrainingTypeEnum.REFLEX
     })
     trainingType: TrainingTypeEnum;
     
@@ -32,7 +32,7 @@ export class Training extends Document {
         required: true, 
         type: String, 
         enum: TrainingStatusEnum, 
-        default: TrainingStatusEnum.Planned
+        default: TrainingStatusEnum.CREATED
     })
     trainingStatus: TrainingStatusEnum
 

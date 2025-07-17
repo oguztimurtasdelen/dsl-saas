@@ -1,6 +1,6 @@
 export enum UserTypeEnum {
-    Manager = 'MANAGER',
-    Coach = 'COACH',
-    Athlete = 'ATHLETE',
-    Viewer = 'VIEWER',
+    MANAGER = 'MANAGER',
+    COACH = 'COACH',
+    ATHLETE = 'ATHLETE',
+    VIEWER = 'VIEWER',
 }

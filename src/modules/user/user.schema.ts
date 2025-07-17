@@ -18,10 +18,10 @@ export class User extends Document {
     @Prop({required: true})
     password: string;
 
-    @Prop({required: true, enum: UserRoleEnum, default: UserRoleEnum.User})
+    @Prop({required: true, enum: UserRoleEnum, default: UserRoleEnum.USER})
     userRole: string;
 
-    @Prop({required: true, enum: UserTypeEnum, default: UserTypeEnum.Athlete})
+    @Prop({required: true, enum: UserTypeEnum, default: UserTypeEnum.ATHLETE})
     userType: string;
 
     @Prop({required: true})

@@ -28,7 +28,6 @@ export class TrainingController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto) {
     const trainingType: TrainingType = trainingFunction.convertTrainingDtoToType(updateTrainingDto);
-    console.log(trainingType)
     return this.trainingService.update(id, trainingType);
   }
 
