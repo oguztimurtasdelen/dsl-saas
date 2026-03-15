@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common'
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { convertProfileDtoToType } from './functions/profile.function';
 
 @Controller('profile')
 export class ProfileController {
@@ -10,7 +9,7 @@ export class ProfileController {
 
   @Post()
   async create(@Body() createProfileDto: CreateProfileDto) {
-    return await this.userprofileService.createProfile(convertProfileDtoToType(createProfileDto));
+    return await this.userprofileService.createProfile(createProfileDto);
   }
 
   @Get()
@@ -25,7 +24,7 @@ export class ProfileController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return await this.userprofileService.update(id, convertProfileDtoToType(updateProfileDto));
+    return await this.userprofileService.update(id, updateProfileDto);
   }
 
   @Delete(':id')

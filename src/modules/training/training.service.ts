@@ -5,6 +5,7 @@ import { TrainingType } from './training.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Training } from './training.schema';
 import { Model } from 'mongoose';
+import { TrainingMapper } from './training.mapper';
 
 @Injectable()
 export class TrainingService {
@@ -24,13 +25,15 @@ export class TrainingService {
     return await this.trainingModel.findById(id)
   }
 
-  async create(trainingType: TrainingType) {
+  async create(createTrainingDto: CreateTrainingDto) {
+    const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
     const _training = await this.trainingModel.create(trainingType);
 
     return _training;
   }
 
-  async update(id: string, trainingType: TrainingType): Promise<Training> {
+  async update(id: string, updateTrainingDto: UpdateTrainingDto): Promise<Training> {
+    const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(updateTrainingDto);
     return await this.trainingModel.findByIdAndUpdate(
       id,
       trainingType,

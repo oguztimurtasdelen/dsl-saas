@@ -4,15 +4,10 @@ import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signing.dto';
 import { CreateProfileDto } from '../profile/dto/create-profile.dto';
 import { User } from '../user/user.schema';
-import * as userFunction from "../user/functions/user.function";
 import { ProfileService } from '../profile/profile.service';
-import * as profileFunction from '../profile/functions/profile.function';
 import { Profile } from '../profile/profile.schema';
-import { UpdateUserDto } from '../user/dto/update-user.dto';
-import { UserService } from '../user/user.service';
-import { UserType } from '../user/user.type';
-import { ProfileType } from '../profile/profile.type';
 import { SignUpReturnDto } from './dto/signup-return.dto';
+import { ProfileMapper } from '../profile/profile.mapper';
 
 
 @Controller('authentication')
@@ -24,13 +19,10 @@ export class AuthenticationController {
 
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto) {
-    const userType: UserType = userFunction.convertUserDtoToType(signUpDto);
-    const signedUpUser: User = await this.authenticationService.signUpUser(userType);
+    const signedUpUser: User = await this.authenticationService.signUpUser(signUpDto);
 
-
-    let profileDto: CreateProfileDto = profileFunction.createProfileDto(signedUpUser);
-    const profileType: ProfileType = profileFunction.convertProfileDtoToType(profileDto);
-    const signedUpUserProfile: Profile = await this.profileService.createProfile(profileType);
+    let profileDto: CreateProfileDto = ProfileMapper.createProfileDto(signedUpUser);
+    const signedUpUserProfile: Profile = await this.profileService.createProfile(profileDto);
     
     return <SignUpReturnDto>{
       success: true,

@@ -4,6 +4,8 @@ import { ProfileType } from './profile.type';
 import { Profile } from './profile.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { CreateProfileDto } from './dto/create-profile.dto';
+import { ProfileMapper } from './profile.mapper';
 
 
 @Injectable()
@@ -14,7 +16,9 @@ export class ProfileService {
     private readonly profileModel: Model<Profile>
   ) {}
 
-  async createProfile(profileType: ProfileType): Promise<Profile> {    
+  async createProfile(profileDto: CreateProfileDto): Promise<Profile> {
+    // Convert dto to type
+    const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileDto);
     const _userProfile = await this.profileModel.create(profileType);
 
     return _userProfile;
@@ -28,7 +32,8 @@ export class ProfileService {
     return await this.profileModel.findById( profileId ).populate('user').exec();
   }
 
-  async update(profileId: string, profileType: ProfileType) {
+  async update(profileId: string, profileUpdateDto: UpdateProfileDto) {
+    const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileUpdateDto);
     return await this.profileModel.findByIdAndUpdate(
       profileId,
       profileType,

@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
 import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
+import { SignUpDto } from './dto/signup.dto';
+import { UserMapper } from '../user/user.mapper';
 
 
 const chalk = require('chalk');
@@ -34,7 +36,10 @@ export class AuthenticationService {
     return await this.bcrypt.compare(plainPass, hashedPass);
   }
 
-  async signUpUser(userType: UserType): Promise<User> {
+  async signUpUser(signUpDto: SignUpDto): Promise<User> {
+    // Convert dto to type
+    const userType: UserType = UserMapper.convertUserDtoToType(signUpDto);
+
     // Check if user already exists
     const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
     if (existingUser) {

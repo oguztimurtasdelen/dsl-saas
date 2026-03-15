@@ -1,8 +1,6 @@
 import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { convertUserDtoToType } from './functions/user.function';
-import { JwtAuthGuard } from 'src/customs/validators/jwt-auth.guard';
 import { ProfileService } from '../profile/profile.service';
 import { User } from './user.schema';
 
@@ -27,7 +25,7 @@ export class UserController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.userService.update(id, convertUserDtoToType(updateUserDto));
+    return await this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')

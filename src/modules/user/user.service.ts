@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from './user.schema';
 import { UserType } from './user.type';
-import { ProfileService } from '../profile/profile.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,8 @@ export class UserService {
     return this.userModel.findById(userId).populate('profile').exec();
   }
 
-  async update(userId: string, userType: UserType): Promise<User> {
+  async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const userType: UserType = UserMapper.convertUserDtoToType(updateUserDto);
     return await this.userModel.findByIdAndUpdate(
       userId,
       userType,
