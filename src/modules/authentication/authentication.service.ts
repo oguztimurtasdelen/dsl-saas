@@ -36,6 +36,44 @@ export class AuthenticationService {
     return await this.bcrypt.compare(plainPass, hashedPass);
   }
 
+  // ✅ NEW
+  generateAccessToken(payload: any): string {
+    return this.jwtService.sign(payload, {
+      expiresIn: '1m'
+    });
+  }
+
+  // ✅ NEW
+  generateRefreshToken(payload: any): string {
+    return this.jwtService.sign(payload, {
+      expiresIn: '7d'
+    });
+  }
+
+  // ✅ NEW
+  verifyRefreshToken(token: string) {
+    try {
+      return this.jwtService.verify(token);
+    } catch (e) {
+      throw new HttpException(
+        { success: false, message: 'Invalid refresh token' },
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+  }
+
+  // ✅ NEW
+  async refreshToken(token: string) {
+    const payload = this.verifyRefreshToken(token);
+
+    return {
+      accessToken: this.generateAccessToken({
+        userId: payload.userId,
+        userEmail: payload.userEmail
+      })
+    };
+  }
+
   async signUpUser(signUpDto: SignUpDto): Promise<User> {
     // Convert dto to type
     const userType: UserType = UserMapper.convertUserDtoToType(signUpDto);
@@ -81,11 +119,20 @@ export class AuthenticationService {
       userId: _user._id,
       userEmail: _user.email
     };
-    const accessToken = this.jwtService.sign(payload);
+
+    const accessToken = this.generateAccessToken(payload);
+    const refreshToken = this.generateRefreshToken(payload);
+    
+    console.log( chalk.bgYellow(_user.email), chalk.yellow("with access token "), chalk.yellow(accessToken) );
+    console.log( chalk.bgBlue(_user.email), chalk.yellow("with refresh token "), chalk.blue(refreshToken) );
+    console.log('ACCESS TOKEN RAW:', accessToken);
+    console.log('ACCESS TOKEN PARTS:', accessToken.split('.').length);
+    //const accessToken = this.jwtService.sign(payload);
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
-      token: accessToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       user: {
         _id: _user._id,
         name: _user.name,

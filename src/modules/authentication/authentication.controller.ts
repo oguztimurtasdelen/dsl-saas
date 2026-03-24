@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Res, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signing.dto';
@@ -8,6 +8,7 @@ import { ProfileService } from '../profile/profile.service';
 import { Profile } from '../profile/profile.schema';
 import { SignUpReturnDto } from './dto/signup-return.dto';
 import { ProfileMapper } from '../profile/profile.mapper';
+import { Response, Request } from 'express';
 
 
 @Controller('authentication')
@@ -32,8 +33,42 @@ export class AuthenticationController {
   }
 
   @Post('signin')
-  signin(@Body() signInDto: SignInDto) {
-    return this.authenticationService.signInUser(signInDto)
+  async signin(
+    @Body() signInDto: SignInDto,
+    @Res({ passthrough: true }) res: Response
+) {
+    const result = await this.authenticationService.signInUser(signInDto);
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: true, // prod
+      sameSite: 'strict',
+      path: '/authentication/refresh',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    return result;
+
+  }
+
+  @Post('refresh')
+  async refresh(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
+    const token = req.cookies?.refreshToken;
+    console.log('REFRESH TOKEN RECEIVED:', req.cookies);
+    console.log('REFRESH TOKEN res:', res);
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+
+    return this.authenticationService.refreshToken(token);
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('refreshToken', {
+      path: '/authentication/refresh'
+    });
+
+    return { success: true };
   }
 
   @Get()

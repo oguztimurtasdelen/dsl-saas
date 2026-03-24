@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
-import mongoose from 'mongoose';
+import * as cookieParser from 'cookie-parser';
 
 const chalk = require('chalk');
 
@@ -16,12 +16,15 @@ async function bootstrap() {
     whitelist: true, // Strips out properties that are not in the DTO
   }));
 
+  app.use(cookieParser());
+  
   // CORS Configuration: Only accept requests from the specified origin.
   if (configuration().server.allowed_origins) {
     app.enableCors({
       origin: configuration().server.allowed_origins,
       methods: 'GET,POST,PUT,DELETE', //Allowed HTTP Methods
       allowedHeaders: 'Content-Type, Authorization', // Allowed Headers
+      credentials: true, // Allow cookies to be sent with requests
     }); 
   }
 
