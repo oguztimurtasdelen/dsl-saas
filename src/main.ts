@@ -25,7 +25,6 @@ async function bootstrap() {
       credentials: true, // Allow credentials (cookies, authorization headers)
       methods: 'GET,POST,PUT,DELETE', //Allowed HTTP Methods
       allowedHeaders: 'Content-Type, Authorization', // Allowed Headers
-      credentials: true, // Allow cookies to be sent with requests
     }); 
   }
 
