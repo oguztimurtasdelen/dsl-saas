@@ -12,10 +12,4 @@ export class JwtStrategy extends PassportStrategy(Strategy){
           secretOrKey: process.env.JWT_SECRET_KEY || 'dsl_jwt_secret_key',  // JWT'yi doğrulamak için kullanılan secret key
         });
     }
-   async validate(payload: any) {
-  console.log('🟢 STRATEGY VALIDATE CALLED');
-  console.log('PAYLOAD:', payload);
-
-  return payload;
-}
 }

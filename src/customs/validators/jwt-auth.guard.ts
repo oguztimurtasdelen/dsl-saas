@@ -8,7 +8,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const token = req.headers.authorization?.replace('Bearer ', '');
 
-    console.log('PART COUNT:', token?.split('.').length);
+    console.log('token:', req.headers);
 
     return super.canActivate(context);
     }

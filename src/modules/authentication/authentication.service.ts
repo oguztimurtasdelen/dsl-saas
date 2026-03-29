@@ -10,6 +10,7 @@ import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
 import { SignUpDto } from './dto/signup.dto';
 import { UserMapper } from '../user/user.mapper';
+import { profile } from 'console';
 
 
 const chalk = require('chalk');
@@ -117,7 +118,8 @@ export class AuthenticationService {
     // The payload can contain any data you want to include in the token
     const payload = {
       userId: _user._id,
-      userEmail: _user.email
+      userEmail: _user.email,
+      profileId: _user.profile._id
     };
 
     const accessToken = this.generateAccessToken(payload);
@@ -131,8 +133,8 @@ export class AuthenticationService {
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',
-      accessToken: accessToken,
-      refreshToken: refreshToken,
+      //accessToken: accessToken,
+      //refreshToken: refreshToken,
       user: {
         _id: _user._id,
         name: _user.name,

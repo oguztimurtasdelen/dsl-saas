@@ -15,7 +15,7 @@ import { Response, Request } from 'express';
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
-    private readonly profileService: ProfileService,
+    private readonly profileService: ProfileService 
   ) {}
 
   @Post('signup')
@@ -38,7 +38,11 @@ export class AuthenticationController {
     @Res({ passthrough: true }) res: Response
 ) {
     const result = await this.authenticationService.signInUser(signInDto);
-    res.cookie('refreshToken', result.refreshToken, {
+    res.cookie('refreshToken', this.authenticationService.generateRefreshToken({
+      userId: '',
+      userEmail: '',
+      profileId: ''
+    }), {
       httpOnly: true,
       secure: true, // prod
       sameSite: 'strict',
@@ -53,6 +57,7 @@ export class AuthenticationController {
   @Post('refresh')
   async refresh(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
     const token = req.cookies?.refreshToken;
+    
     console.log('REFRESH TOKEN RECEIVED:', req.cookies);
     console.log('REFRESH TOKEN res:', res);
     if (!token) {
