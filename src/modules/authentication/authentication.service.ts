@@ -125,8 +125,7 @@ export class AuthenticationService {
     
     console.log( chalk.bgYellow(_user.email), chalk.yellow("with access token "), chalk.yellow(accessToken) );
     console.log( chalk.bgBlue(_user.email), chalk.yellow("with refresh token "), chalk.blue(refreshToken) );
-    console.log('ACCESS TOKEN RAW:', accessToken);
-    console.log('ACCESS TOKEN PARTS:', accessToken.split('.').length);
+
     //const accessToken = this.jwtService.sign(payload);
     return <SignInReturnDto>({
       success: true,

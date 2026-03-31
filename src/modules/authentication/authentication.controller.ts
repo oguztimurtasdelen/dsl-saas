@@ -45,7 +45,7 @@ export class AuthenticationController {
       path: '/authentication/refresh',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
-
+    result.refreshToken = undefined; // Don't return the refresh token in the response body
     return result;
 
   }
@@ -53,8 +53,6 @@ export class AuthenticationController {
   @Post('refresh')
   async refresh(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
     const token = req.cookies?.refreshToken;
-    console.log('REFRESH TOKEN RECEIVED:', req.cookies);
-    console.log('REFRESH TOKEN res:', res);
     if (!token) {
       throw new UnauthorizedException();
     }
