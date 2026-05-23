@@ -16,7 +16,7 @@ const chalk = require('chalk');
 
 @Injectable()
 export class AuthenticationService {
-  private bcrypt = require('bcrypt');
+  private bcryptjs = require('bcryptjs');
   private readonly saltRounds = 10; // Cost Factor to iterate
 
   constructor(
@@ -27,13 +27,13 @@ export class AuthenticationService {
 
   // This function takes a string and returns a hashed string
   async hashPass(openPass: string): Promise<string>{
-    const salt = await this.bcrypt.genSalt(this.saltRounds);
-    return await this.bcrypt.hash(openPass, salt);
+    const salt = await this.bcryptjs.genSalt(this.saltRounds);
+    return await this.bcryptjs.hash(openPass, salt);
   }
 
   // This function takes a plain password and a hashed password and returns a boolean
   async validatePass(plainPass: string, hashedPass: string): Promise<boolean>{
-    return await this.bcrypt.compare(plainPass, hashedPass);
+    return await this.bcryptjs.compare(plainPass, hashedPass);
   }
 
   // ✅ NEW

@@ -9,7 +9,14 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    // "baseUrl": "./", usage will be deprecated future versions of typescript, use "paths" instead
+    "paths": {
+      // All paths covering with ./ to keep working everywhere.
+      "*": ["./*"],
+      // If you want to use path aliases, you can uncomment and adjust the following lines:
+      // "@app/*": ["./src/app/*"],
+      // "@lib/*": ["./src/lib/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
