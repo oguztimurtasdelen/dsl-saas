@@ -39,21 +39,25 @@ export class AuthenticationService {
   // ✅ NEW
   generateAccessToken(payload: any): string {
     return this.jwtService.sign(payload, {
-      expiresIn: '1m'
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
+      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
     });
   }
 
   // ✅ NEW
   generateRefreshToken(payload: any): string {
     return this.jwtService.sign(payload, {
-      expiresIn: '7d'
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
+      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
     });
   }
 
   // ✅ NEW
   verifyRefreshToken(token: string) {
     try {
-      return this.jwtService.verify(token);
+      return this.jwtService.verify(token, {
+        secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
+      });
     } catch (e) {
       throw new HttpException(
         { success: false, message: 'Invalid refresh token' },
@@ -139,8 +143,7 @@ export class AuthenticationService {
         profile: {
           _id: _user.profile._id,
           user: _user.profile.user,
-          avatar: _user.profile.avatar,
-          isActive: _user.profile.isActive
+          avatar: _user.profile.avatar
         }
       }
     });

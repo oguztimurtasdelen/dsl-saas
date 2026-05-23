@@ -10,10 +10,8 @@ import { JwtStrategy } from 'src/customs/validators/jwt.strategy';
   imports: [
     ProfileModule,
     UserModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY || 'dsl_jwt_secret_key',
-      signOptions: {expiresIn: '1h'},
-    }),
+    // These are the default settings for the JwtModule, we aren't using them here because we have two different secret keys for access and refresh tokens
+    JwtModule.register({}),
     
   ],
   controllers: [AuthenticationController],

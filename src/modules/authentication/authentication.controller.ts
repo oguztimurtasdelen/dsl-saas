@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Res, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Res, Req, UnauthorizedException, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signing.dto';
@@ -9,8 +9,6 @@ import { Profile } from '../profile/profile.schema';
 import { SignUpReturnDto } from './dto/signup-return.dto';
 import { ProfileMapper } from '../profile/profile.mapper';
 import { Response, Request } from 'express';
-
-
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
@@ -32,12 +30,14 @@ export class AuthenticationController {
     
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('signin')
   async signin(
     @Body() signInDto: SignInDto,
     @Res({ passthrough: true }) res: Response
 ) {
     const result = await this.authenticationService.signInUser(signInDto);
+ 
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: true, // prod
@@ -45,9 +45,9 @@ export class AuthenticationController {
       path: '/authentication/refresh',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
-    result.refreshToken = undefined; // Don't return the refresh token in the response body
+    // Refresh token has to be secret from the client side.
+    delete result.refreshToken;
     return result;
-
   }
 
   @Post('refresh')
@@ -56,7 +56,7 @@ export class AuthenticationController {
     if (!token) {
       throw new UnauthorizedException();
     }
-
+    console.log('refresh token çağrıldı kankam', token);
     return this.authenticationService.refreshToken(token);
   }
 

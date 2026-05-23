@@ -3,6 +3,8 @@ import { TrainingService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
 import { JwtAuthGuard } from '../../customs/validators/jwt-auth.guard';
+import { CurrentUser } from '../../customs/decorators/current-user.decorator';
+
 
 
 @Controller('training')
@@ -16,7 +18,8 @@ export class TrainingController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll() {
+  findAll(@CurrentUser() user: any) {
+    console.log(user);
     return this.trainingService.findAll();
   }
 
