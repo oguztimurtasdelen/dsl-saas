@@ -19,7 +19,6 @@ export class TrainingController {
   @Get()
   @UseGuards(JwtAuthGuard)
   findAll(@CurrentUser() user: any) {
-    console.log(user);
     return this.trainingService.findAll();
   }
 

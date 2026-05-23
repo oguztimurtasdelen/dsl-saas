@@ -56,7 +56,6 @@ export class AuthenticationController {
     if (!token) {
       throw new UnauthorizedException();
     }
-    console.log('refresh token çağrıldı kankam', token);
     return this.authenticationService.refreshToken(token);
   }
 
