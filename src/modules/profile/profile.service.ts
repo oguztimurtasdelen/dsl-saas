@@ -44,7 +44,7 @@ export class ProfileService {
     );
   }
 
-  async remove(profileId: string) {
-    return await this.profileModel.findByIdAndDelete(profileId);
+  async remove(userId: string) {
+    return await this.profileModel.findOneAndDelete({ user: userId });
   }
 }

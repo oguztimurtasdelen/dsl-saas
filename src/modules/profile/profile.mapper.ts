@@ -7,7 +7,7 @@ import { ProfileType } from "./profile.type";
 export class ProfileMapper {
     static createProfileDto(_user: User): CreateProfileDto{
         return<CreateProfileDto>{
-            _id: _user.profile ? _user.profile._id : new Types.ObjectId(),
+            _id: null, // MongoDB will generate this automatically
             user: _user._id,
             avatar: null,
             isActive: _user.isActive || true

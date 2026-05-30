@@ -3,10 +3,8 @@ import { Types } from "mongoose";
 
 export class CreateProfileDto {
     
-    //@IsNotEmpty({message: '_id cannot be empty!'})
     @IsOptional() // Optional for creation, but required for updates
     _id: Types.ObjectId;
-    
 
     @IsNotEmpty({message: 'userId cannot be empty!'})
     user: Types.ObjectId;

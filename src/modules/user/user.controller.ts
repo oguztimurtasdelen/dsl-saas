@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ProfileService } from '../profile/profile.service';
 import { User } from './user.schema';
+import { identity } from 'node_modules/rxjs/dist/types';
+import { Profile } from '../profile/profile.schema';
 
 @Controller('users')
 export class UserController {
@@ -30,8 +32,9 @@ export class UserController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    const _user: User = await this.userService.remove(id);
-    await this.profileService.remove(_user.profile.toString());
-    return;
+    const profile: Profile = await this.profileService.remove(id);
+    const user: User = await this.userService.remove(id);
+    
+    return user ? { success: true, message: 'User and related profile deleted successfully.' } : { success: false, message: 'User not found.' };
   }
 }

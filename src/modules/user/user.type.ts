@@ -5,7 +5,6 @@ import { UserTypeEnum } from "src/customs/utils/usertype.enum";
 
 
 export type UserType = {
-  profile: Types.ObjectId;
   email: string;
   password: string;
   userRole: UserRoleEnum;

@@ -32,7 +32,7 @@ export class Training extends Document {
         required: true, 
         type: String, 
         enum: TrainingStatusEnum, 
-        default: TrainingStatusEnum.CREATED
+        default: TrainingStatusEnum.NEW
     })
     trainingStatus: TrainingStatusEnum
 

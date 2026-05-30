@@ -15,11 +15,25 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().populate('profile').exec();
+    return this.userModel.find().populate('profile').exec(); // Virtual Populate
+
+    // Aggregate Populate
+    /*
+    return this.userModel.aggregate([
+      {
+        $lookup: {
+          from: 'profiles',
+          localField: '_id',
+          foreignField: 'user',
+          as: 'profiles'
+        }
+      }
+    ]);
+    */
+
   }
 
   async findOne(userId: string): Promise<User | String> {
-    //return new Types.ObjectId(id).toString(); 
     return this.userModel.findById(userId).populate('profile').exec();
   }
 

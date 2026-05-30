@@ -36,7 +36,7 @@ export class AuthenticationService {
     return await this.bcryptjs.compare(plainPass, hashedPass);
   }
 
-  // ✅ NEW
+  // NEW
   generateAccessToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
@@ -44,7 +44,7 @@ export class AuthenticationService {
     });
   }
 
-  // ✅ NEW
+  // NEW
   generateRefreshToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
@@ -52,7 +52,7 @@ export class AuthenticationService {
     });
   }
 
-  // ✅ NEW
+  // NEW
   verifyRefreshToken(token: string) {
     try {
       return this.jwtService.verify(token, {
@@ -66,7 +66,7 @@ export class AuthenticationService {
     }
   }
 
-  // ✅ NEW
+  // NEW
   async refreshToken(token: string) {
     const payload = this.verifyRefreshToken(token);
 
@@ -86,13 +86,13 @@ export class AuthenticationService {
     const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
     if (existingUser) {
       throw new HttpException(
-        { success: false, message: 'User already exists!' },
+        { success: false, message: 'E-mail already exists!' },
         HttpStatus.BAD_REQUEST,
       );
     }
     
     // If user does not exist, create a new user
-    userType.password = await this.hashPass(userType.password);
+    userType.password = await this.hashPass(userType.password); // Hash the password before saving
     const _user = await this.userModel.create(userType);
     return _user;
   }
