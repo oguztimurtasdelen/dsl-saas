@@ -35,11 +35,17 @@ export class ProfileService {
   }
 
   async findAll(): Promise<Profile[]> {
-    return await this.profileModel.find().populate('user').exec();
+    return await this.profileModel.find();
   }
 
-  async findOne(profileId: string): Promise<Profile> {
-    return await this.profileModel.findById( profileId ).populate('user').exec();
+  async findOne(profileId: string): Promise<Profile | null> {
+    return await this.profileModel.findById( profileId );
+  }
+
+  findOneByUserId(userId: Types.ObjectId): Promise<Profile | null> {
+    return this.profileModel
+      .findOne({ user: userId });
+
   }
 
   async update(profileId: string, profileUpdateDto: UpdateProfileDto) {

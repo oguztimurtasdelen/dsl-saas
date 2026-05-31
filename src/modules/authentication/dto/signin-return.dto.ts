@@ -10,10 +10,10 @@ export class SignInReturnDto {
 }
 
 export class SignInReturnUserDto {
-  _id: User['_id'];
+  _id: string;
   name: string;
   surname: string;
-  profile: Profile; //SignInReturnProfileDto;
+  profile: SignInReturnProfileDto;
 }
 
 export class SignInReturnProfileDto {
@@ -21,4 +21,5 @@ export class SignInReturnProfileDto {
   user: string;
   nickname: string;
   avatar: string;
+  isActive: boolean;
 }

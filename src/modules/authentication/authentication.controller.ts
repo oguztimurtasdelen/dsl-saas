@@ -24,7 +24,7 @@ export class AuthenticationController {
     return <SignUpReturnDto>{
       success: true,
       message: 'User signed up successfully! Please verify the email.',
-      _id: signedUpUser._id,
+      _id: signedUpUser._id.toString(),
       email: signedUpUser.email
     };
     

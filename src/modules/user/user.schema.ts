@@ -11,6 +11,8 @@ import { UserTypeEnum } from "src/customs/utils/usertype.enum";
     'id': false
 })
 export class User extends Document {
+
+    _id: Types.ObjectId;
     
     @Prop({unique: true, required: true})
     email: string;

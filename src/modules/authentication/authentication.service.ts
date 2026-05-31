@@ -3,13 +3,15 @@ import { SignInDto } from './dto/signing.dto';
 import { User } from '../user/user.schema';
 import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
 import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
 import { SignUpDto } from './dto/signup.dto';
 import { UserMapper } from '../user/user.mapper';
+import { UserService } from '../user/user.service';
+import { ProfileService } from '../profile/profile.service';
 
 
 const chalk = require('chalk');
@@ -20,8 +22,8 @@ export class AuthenticationService {
   private readonly saltRounds = 10; // Cost Factor to iterate
 
   constructor(
-    @InjectModel(User.name)
-    private readonly userModel: Model<User>,
+    private readonly userService: UserService,
+    private readonly profileService: ProfileService,
     private readonly jwtService: JwtService
   ) {}
 
@@ -83,7 +85,8 @@ export class AuthenticationService {
     const userType: UserType = UserMapper.convertUserDtoToType(signUpDto);
 
     // Check if user already exists
-    const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
+    //const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
+    const existingUser = await this.userService.findOneByEmail(userType.email);
     if (existingUser) {
       throw new HttpException(
         { success: false, message: 'E-mail already exists!' },
@@ -93,14 +96,17 @@ export class AuthenticationService {
     
     // If user does not exist, create a new user
     userType.password = await this.hashPass(userType.password); // Hash the password before saving
-    const _user = await this.userModel.create(userType);
+    //const _user = await this.userModel.create(userType);
+    const _user = await this.userService.create(userType);
     return _user;
   }
 
   async signInUser(signInDto: SignInDto) {
-    const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').lean().exec() as unknown as User & { profile: Profile };
-    //const _user = await this.userModel.findOne({ email: signInDto.email}).populate('profile').lean().exec() as unknown as User & { profile: Profile };
-    //const _profile = await this.profileModel.findOne({ user: _user._id }).exec();
+    const _user: User = await this.userService.findOneByEmail(signInDto.email);
+    const _profile: Profile = await this.profileService.findOneByUserId(_user._id);
+
+    console.log("_user: ", _user);
+    console.log("_profile: ", _profile);
     
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
     if(!_user || !isPasswordValid) {
@@ -144,7 +150,13 @@ export class AuthenticationService {
         _id: _user._id.toString(),
         name: _user.name,
         surname: _user.surname,
-        profile: _user.profile
+        profile: {
+          _id: _profile._id.toString(),
+          user: _profile.user.toString(),
+          nickname: _profile.nickname,
+          avatar: _profile.avatar,
+          isActive: _profile.isActive
+        }
       }
     });
   }

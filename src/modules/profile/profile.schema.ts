@@ -5,6 +5,8 @@ import { Document, Types, model } from "mongoose";
 @Schema({timestamps: true})
 export class Profile extends Document {
 
+    _id: Types.ObjectId;
+
     @Prop({type: Types.ObjectId, required: true, unique: true, ref: 'User', immutable: true})
     user: Types.ObjectId;
 
