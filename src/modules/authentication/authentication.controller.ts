@@ -9,6 +9,7 @@ import { Profile } from '../profile/profile.schema';
 import { SignUpReturnDto } from './dto/signup-return.dto';
 import { ProfileMapper } from '../profile/profile.mapper';
 import { Response, Request } from 'express';
+
 @Controller('authentication')
 export class AuthenticationController {
   constructor(
@@ -19,13 +20,12 @@ export class AuthenticationController {
   @Post('signup')
   async signup(@Body() signUpDto: SignUpDto) {
     const signedUpUser: User = await this.authenticationService.signUpUser(signUpDto);
-
-    let profileDto: CreateProfileDto = ProfileMapper.createProfileDto(signedUpUser);
-    const signedUpUserProfile: Profile = await this.profileService.createProfile(profileDto);
     
     return <SignUpReturnDto>{
       success: true,
-      message: 'User signed up successfully! Please verify the email.'
+      message: 'User signed up successfully! Please verify the email.',
+      _id: signedUpUser._id,
+      email: signedUpUser.email
     };
     
   }

@@ -22,13 +22,13 @@ export class ProfileController {
     return await this.userprofileService.findOne(profileId);
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return await this.userprofileService.update(id, updateProfileDto);
+  @Put(':profileId')
+  async update(@Param('profileId') profileId: string, @Body() updateProfileDto: UpdateProfileDto) {
+    return await this.userprofileService.update(profileId, updateProfileDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.userprofileService.remove(id);
+  @Delete(':profileId')
+  async remove(@Param('profileId') profileId: string) {
+    return await this.userprofileService.remove(profileId);
   }
 }

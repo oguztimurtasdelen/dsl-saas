@@ -7,7 +7,7 @@ import { UserTypeEnum } from "src/customs/utils/usertype.enum";
 
 @Schema({
     timestamps: true, 
-    toJSON: { virtuals: true, versionKey: false }, 
+    toJSON: { virtuals: true, versionKey: false },
     'id': false
 })
 export class User extends Document {
@@ -52,5 +52,5 @@ export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.virtual('profile', {
     ref: 'Profile',
     localField: '_id',
-    foreignField: 'user',
+    foreignField: 'user'
 });

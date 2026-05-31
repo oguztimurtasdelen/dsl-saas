@@ -17,7 +17,8 @@ export class ProfileMapper {
     static convertProfileDtoToType(dto: CreateProfileDto | UpdateProfileDto): ProfileType{
         return<ProfileType>{
             _id: dto._id,
-            user: dto.user,
+            user: dto.user? new Types.ObjectId(dto.user) : dto.user,
+            nickname: dto.nickname,
             avatar: dto.avatar,
             isActive: dto.isActive
         };
