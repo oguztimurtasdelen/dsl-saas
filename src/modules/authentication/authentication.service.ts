@@ -10,6 +10,7 @@ import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
 import { SignUpDto } from './dto/signup.dto';
 import { UserMapper } from '../user/user.mapper';
+import { IAccessTokenPayload } from 'src/customs/interfaces/accessTokenPayload.interface';
 
 
 const chalk = require('chalk');
@@ -37,18 +38,24 @@ export class AuthenticationService {
   }
 
   // ✅ NEW
-  generateAccessToken(payload: any): string {
+  generateAccessToken(payload: IAccessTokenPayload): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+      issuer: 'dsl-saas',
+      audience: 'dsl-ionic-app-user',
+      jwtid: crypto.randomUUID()
     });
   }
 
   // ✅ NEW
-  generateRefreshToken(payload: any): string {
+  generateRefreshToken(payload: IAccessTokenPayload): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
-      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+      issuer: 'dsl-saas',
+      audience: 'dsl-ionic-app-user',
+      jwtid: crypto.randomUUID()
     });
   }
 
@@ -69,13 +76,13 @@ export class AuthenticationService {
   // ✅ NEW
   async refreshToken(token: string) {
     const payload = this.verifyRefreshToken(token);
+    const newAccessToken = this.generateAccessToken({
+      sub: payload.sub
+    });
+    console.log('refreshed token payload', this.jwtService.decode(newAccessToken));
 
-    return {
-      accessToken: this.generateAccessToken({
-        userId: payload.userId,
-        userEmail: payload.userEmail
-      })
-    };
+    // TODO REFRESH TOKEN SONRASI HOME PAGE'E GİDİYOR SAYFADA KALM
+    return newAccessToken
   }
 
   async signUpUser(signUpDto: SignUpDto): Promise<User> {
@@ -117,20 +124,22 @@ export class AuthenticationService {
     console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
     console.log( chalk.bgRed("______________________________________________________________"));
 
+
+    console.log('mustafa1', _user);
     // Create JWT token
     // The payload can contain any data you want to include in the token
-    const payload = {
-      userId: _user._id,
-      userEmail: _user.email
+    const payload: IAccessTokenPayload = {
+      sub: _user.profile._id.toString()
     };
 
     const accessToken = this.generateAccessToken(payload);
     const refreshToken = this.generateRefreshToken(payload);
     
+    console.log('payload',this.jwtService.decode(accessToken));
+
     console.log( chalk.bgYellow(_user.email), chalk.yellow("with access token "), chalk.yellow(accessToken) );
     console.log( chalk.bgBlue(_user.email), chalk.yellow("with refresh token "), chalk.blue(refreshToken) );
 
-    //const accessToken = this.jwtService.sign(payload);
     return <SignInReturnDto>({
       success: true,
       message: 'User signed in successfully!',

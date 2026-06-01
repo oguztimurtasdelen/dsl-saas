@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
+import { IAccessTokenPayload } from "../interfaces/accessTokenPayload.interface";
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
         });
     }
     // After the token is validated, this function is called to return the payload.
-    async validate(payload: any) {
+    async validate(payload: IAccessTokenPayload) {
         return payload;
     }
 }
