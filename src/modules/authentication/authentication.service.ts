@@ -138,7 +138,7 @@ export class AuthenticationService {
     // Create JWT token
     // The payload can contain any data you want to include in the token
     const payload: IAccessTokenPayload = {
-      sub: _user.profile._id.toString()
+      sub: _profile._id.toString()
     };
 
     const accessToken = this.generateAccessToken(payload);
