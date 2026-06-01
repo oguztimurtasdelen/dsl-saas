@@ -9,6 +9,8 @@ import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
 @Schema({timestamps: true})
 export class Training extends Document {
 
+    _id: Types.ObjectId;
+
     @Prop({unique: false, ref: Profile.name})
     profile: Types.ObjectId;
     
@@ -32,7 +34,7 @@ export class Training extends Document {
         required: true, 
         type: String, 
         enum: TrainingStatusEnum, 
-        default: TrainingStatusEnum.CREATED
+        default: TrainingStatusEnum.NEW
     })
     trainingStatus: TrainingStatusEnum
 

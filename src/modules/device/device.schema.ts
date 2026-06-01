@@ -1,9 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import { DeviceStatusEnum } from "src/customs/utils/deviceStatus.enum";
 
 @Schema({timestamps: true})
 export class Device extends Document {
+
+    _id: Types.ObjectId;
 
     @Prop({
         unique: true,

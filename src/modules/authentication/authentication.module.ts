@@ -5,11 +5,18 @@ import { ProfileModule } from '../profile/profile.module';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/customs/validators/jwt.strategy';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserSchema } from '../user/user.schema';
+import { ProfileSchema } from '../profile/profile.schema';
 
 @Module({
   imports: [
-    ProfileModule,
     UserModule,
+    ProfileModule,
+    MongooseModule.forFeature([
+      {name: 'User.name', schema: UserSchema},
+      {name: 'Profile.name', schema: ProfileSchema}
+    ]),
     // These are the default settings for the JwtModule, we aren't using them here because we have two different secret keys for access and refresh tokens
     JwtModule.register({}),
     

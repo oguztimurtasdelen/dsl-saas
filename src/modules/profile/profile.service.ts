@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileType } from './profile.type';
 import { Profile } from './profile.schema';
@@ -19,17 +19,33 @@ export class ProfileService {
   async createProfile(profileDto: CreateProfileDto): Promise<Profile> {
     // Convert dto to type
     const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileDto);
-    const _userProfile = await this.profileModel.create(profileType);
 
-    return _userProfile;
+    // Check if nickname already exists
+    const existingProfile = await this.profileModel.findOne({ nickname: profileType.nickname }).exec();
+    if (existingProfile) {
+      throw new HttpException(
+        { success: false, message: 'Nickname already exists!' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // If nickname does not exist, create a new profile
+    const _profile = await this.profileModel.create(profileType);
+    return _profile;
   }
 
   async findAll(): Promise<Profile[]> {
-    return await this.profileModel.find().populate('user').exec();
+    return await this.profileModel.find();
   }
 
-  async findOne(profileId: string): Promise<Profile> {
-    return await this.profileModel.findById( profileId ).populate('user').exec();
+  async findOne(profileId: string): Promise<Profile | null> {
+    return await this.profileModel.findById( profileId );
+  }
+
+  findOneByUserId(userId: Types.ObjectId): Promise<Profile | null> {
+    return this.profileModel
+      .findOne({ user: userId });
+
   }
 
   async update(profileId: string, profileUpdateDto: UpdateProfileDto) {

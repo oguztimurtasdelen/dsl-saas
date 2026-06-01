@@ -13,6 +13,6 @@ import { ProfileModule } from '../profile/profile.module';
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService, MongooseModule]
+  exports: [UserService]
 })
 export class UserModule {}

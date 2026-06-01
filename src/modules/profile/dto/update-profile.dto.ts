@@ -7,4 +7,7 @@ import { Types } from 'mongoose';
 export class UpdateProfileDto extends PartialType(CreateProfileDto) {
     @IsNotEmpty({message: '_id cannot be empty!'})
     _id : Types.ObjectId;
+
+    @IsOptional()
+    user: Types.ObjectId;
 }

@@ -3,13 +3,15 @@ import { SignInDto } from './dto/signing.dto';
 import { User } from '../user/user.schema';
 import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
 import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
 import { SignUpDto } from './dto/signup.dto';
 import { UserMapper } from '../user/user.mapper';
+import { UserService } from '../user/user.service';
+import { ProfileService } from '../profile/profile.service';
 import { IAccessTokenPayload } from 'src/customs/interfaces/accessTokenPayload.interface';
 
 
@@ -21,8 +23,8 @@ export class AuthenticationService {
   private readonly saltRounds = 10; // Cost Factor to iterate
 
   constructor(
-    @InjectModel(User.name)
-    private readonly userModel: Model<User>,
+    private readonly userService: UserService,
+    private readonly profileService: ProfileService,
     private readonly jwtService: JwtService
   ) {}
 
@@ -38,7 +40,7 @@ export class AuthenticationService {
   }
 
   // ✅ NEW
-  generateAccessToken(payload: IAccessTokenPayload): string {
+  generateAccessToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
       expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
@@ -59,7 +61,7 @@ export class AuthenticationService {
     });
   }
 
-  // ✅ NEW
+  // NEW
   verifyRefreshToken(token: string) {
     try {
       return this.jwtService.verify(token, {
@@ -73,7 +75,7 @@ export class AuthenticationService {
     }
   }
 
-  // ✅ NEW
+  // NEW
   async refreshToken(token: string) {
     const payload = this.verifyRefreshToken(token);
     const newAccessToken = this.generateAccessToken({
@@ -90,22 +92,29 @@ export class AuthenticationService {
     const userType: UserType = UserMapper.convertUserDtoToType(signUpDto);
 
     // Check if user already exists
-    const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
+    //const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
+    const existingUser = await this.userService.findOneByEmail(userType.email);
     if (existingUser) {
       throw new HttpException(
-        { success: false, message: 'User already exists!' },
+        { success: false, message: 'E-mail already exists!' },
         HttpStatus.BAD_REQUEST,
       );
     }
     
     // If user does not exist, create a new user
-    userType.password = await this.hashPass(userType.password);
-    const _user = await this.userModel.create(userType);
+    userType.password = await this.hashPass(userType.password); // Hash the password before saving
+    //const _user = await this.userModel.create(userType);
+    const _user = await this.userService.create(userType);
     return _user;
   }
 
   async signInUser(signInDto: SignInDto) {
-    const _user = await this.userModel.findOne({ email: signInDto.email }).populate('profile').lean().exec() as unknown as User & { profile: Profile };
+    const _user: User = await this.userService.findOneByEmail(signInDto.email);
+    const _profile: Profile = await this.profileService.findOneByUserId(_user._id);
+
+    console.log("_user: ", _user);
+    console.log("_profile: ", _profile);
+    
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
     if(!_user || !isPasswordValid) {
       throw new HttpException(
@@ -146,13 +155,15 @@ export class AuthenticationService {
       accessToken: accessToken,
       refreshToken: refreshToken,
       user: {
-        _id: _user._id,
+        _id: _user._id.toString(),
         name: _user.name,
         surname: _user.surname,
         profile: {
-          _id: _user.profile._id,
-          user: _user.profile.user,
-          avatar: _user.profile.avatar
+          _id: _profile._id.toString(),
+          user: _profile.user.toString(),
+          nickname: _profile.nickname,
+          avatar: _profile.avatar,
+          isActive: _profile.isActive
         }
       }
     });

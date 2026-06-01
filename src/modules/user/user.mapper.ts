@@ -7,7 +7,6 @@ import { UserTypeEnum } from "src/customs/utils/usertype.enum";
 export class UserMapper {
     static convertUserDtoToType(dto: SignUpDto | UpdateUserDto): UserType {
         return<UserType>{
-            profile: (dto as UpdateUserDto).profile,
             email: dto.email,
             password: dto.password,
             userRole: UserRoleEnum[dto.userRole],
