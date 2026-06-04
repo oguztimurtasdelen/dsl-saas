@@ -81,10 +81,8 @@ export class AuthenticationService {
     const newAccessToken = this.generateAccessToken({
       sub: payload.sub
     });
-    console.log('refreshed token payload', this.jwtService.decode(newAccessToken));
 
-    // TODO REFRESH TOKEN SONRASI HOME PAGE'E GİDİYOR SAYFADA KALM
-    return newAccessToken
+    return { accessToken: newAccessToken };
   }
 
   async signUpUser(signUpDto: SignUpDto): Promise<User> {
@@ -119,11 +117,8 @@ export class AuthenticationService {
   async signInUser(signInDto: SignInDto) {
     const _user: User = await this.userService.findOneByEmail(signInDto.email);
     const _profile: Profile = await this.profileService.findOneByUserId(_user._id);
-
-    console.log("_user: ", _user);
-    console.log("_profile: ", _profile);
-    
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
+
     if(!_user || !isPasswordValid) {
       throw new HttpException(
         { success: false, message: 'Invalid password or username!' },
@@ -141,9 +136,6 @@ export class AuthenticationService {
     console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
     console.log( chalk.bgRed("______________________________________________________________"));
 
-
-    console.log('mustafa1', _user);
-    console.log('mustafa2', _profile);
     // Create JWT token
     // The payload can contain any data you want to include in the token
     const payload: IAccessTokenPayload = {
@@ -154,7 +146,6 @@ export class AuthenticationService {
     const refreshToken = this.generateRefreshToken(payload);
     
     console.log('payload',this.jwtService.decode(accessToken));
-
     console.log( chalk.bgYellow(_user.email), chalk.yellow("with access token "), chalk.yellow(accessToken) );
     console.log( chalk.bgBlue(_user.email), chalk.yellow("with refresh token "), chalk.blue(refreshToken) );
 
