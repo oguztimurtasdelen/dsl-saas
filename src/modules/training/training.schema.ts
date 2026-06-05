@@ -25,10 +25,7 @@ export class Training extends Document {
         default: TrainingTypeEnum.REFLEX
     })
     trainingType: TrainingTypeEnum;
-    
-    @Prop({unique: false, required: true})
-    trainingProgram: ReflexTrainingDto;
-    
+
     @Prop({
         unique: false, 
         required: true, 
@@ -37,10 +34,10 @@ export class Training extends Document {
         default: TrainingStatusEnum.NEW
     })
     trainingStatus: TrainingStatusEnum
-
-
-
     
+    @Prop({unique: false, required: true})
+    trainingProgram: ReflexTrainingDto;
+
 }
 
 export const TrainingSchema = SchemaFactory.createForClass(Training);

@@ -34,7 +34,7 @@ export class Device extends Document {
         enum: DeviceStatusEnum,
         default: DeviceStatusEnum.OFFLINE
     })
-    status: DeviceStatusEnum;
+    deviceStatus: DeviceStatusEnum;
 
     @Prop({
         required: false,

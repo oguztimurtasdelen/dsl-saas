@@ -103,14 +103,7 @@ export class AuthenticationService {
     userType.password = await this.hashPass(userType.password); // Hash the password before saving
     //const _user = await this.userModel.create(userType);
     const _user = await this.userService.create(userType);
-    // Till ask to user, the system needs to create  a profile as a default.
-    const _profile = await this.profileService.createProfile({
-      _id: new Types.ObjectId(),
-      user: _user._id,
-      nickname: `${_user.name}${_user.surname}`,
-      avatar: null,
-      isActive: true
-    });
+    
     return _user;
   }
 
@@ -135,6 +128,7 @@ export class AuthenticationService {
 
     console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
     console.log( chalk.bgRed("______________________________________________________________"));
+
 
     // Create JWT token
     // The payload can contain any data you want to include in the token

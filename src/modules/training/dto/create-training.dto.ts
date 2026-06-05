@@ -16,12 +16,12 @@ export class CreateTrainingDto {
     @IsEnum(TrainingTypeEnum, {message: 'trainingType    is not valid!'})
     trainingType: TrainingTypeEnum;
 
+    @IsNotEmpty({message: "trainingStatus cannot be empty!"})
+    @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
+    trainingStatus: TrainingStatusEnum;
+
     @ValidateNested()
     @Type(() => ReflexTrainingDto)
     trainingProgram: ReflexTrainingDto[];
-
-    @IsNotEmpty({message: "trainingStatus cannot be empty!"})
-    @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
-    trainingStatus: TrainingStatusEnum
 
 }

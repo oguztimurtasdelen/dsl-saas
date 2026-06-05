@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, HttpException, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ProfileService } from '../profile/profile.service';
 import { User } from './user.schema';
 import { identity } from 'node_modules/rxjs/dist/types';
 import { Profile } from '../profile/profile.schema';
+import { GetUsersQueryReturnDto } from './dto/get-users-query-return.dto';
+import { GetUsersQueryDto } from './dto/get-users-query.dto';
 
 @Controller('users')
 export class UserController {
@@ -14,14 +16,14 @@ export class UserController {
   ) {}
 
   @Get()
-  async findAll() {
-    return await this.userService.findAll();
+  async findAll(@Query() query: GetUsersQueryDto): Promise<GetUsersQueryReturnDto | HttpException> {
+    return await this.userService.findAll(query);
   }
 
   @Get(':id')
   // To open jwt guard.
   //@UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<User | null> {
     return await this.userService.findOne(id);
   }
 
@@ -32,7 +34,7 @@ export class UserController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    const profile: Profile = await this.profileService.remove(id);
+    const profile: Profile = await this.profileService.removeByUserId(id);
     const user: User = await this.userService.remove(id);
     
     return user ? { success: true, message: 'User and related profile deleted successfully.' } : { success: false, message: 'User not found.' };

@@ -8,6 +8,6 @@ export type TrainingType = {
     profile: Types.ObjectId;
     device: Types.ObjectId;
     trainingType: TrainingTypeEnum
-    trainingProgram: ReflexTrainingDto[];
     trainingStatus: TrainingStatusEnum;
+    trainingProgram: ReflexTrainingDto[];
 }

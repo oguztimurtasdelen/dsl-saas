@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types, model } from "mongoose";
 
 
-@Schema({timestamps: true})
+@Schema({timestamps: true, toJSON: { virtuals: true, versionKey: false }, 'id': false})
 export class Profile extends Document {
 
     _id: Types.ObjectId;
