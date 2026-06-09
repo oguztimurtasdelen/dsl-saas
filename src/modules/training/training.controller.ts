@@ -3,7 +3,7 @@ import { TrainingService } from './training.service';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
 import { JwtAuthGuard } from '../../customs/validators/jwt-auth.guard';
-import { CurrentUser } from '../../customs/decorators/current-user.decorator';
+import { CurrentProfileID } from '../../customs/decorators/current-profileID.decorator';
 import { Training } from './training.schema';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
@@ -15,8 +15,8 @@ export class TrainingController {
   constructor(private readonly trainingService: TrainingService) {}
 
   @Get()
-  //@UseGuards(JwtAuthGuard)
-  findAll(@CurrentUser() user: any, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto | HttpException> {
+  @UseGuards(JwtAuthGuard)
+  findAll(@CurrentProfileID() user: any, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto | HttpException> {
     return this.trainingService.findAll(query);
   }
 
