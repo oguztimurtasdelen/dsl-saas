@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileType } from './profile.type';
 import { Profile } from './profile.schema';
@@ -8,6 +8,9 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { ProfileMapper } from './profile.mapper';
 import { GetProfilesQueryDto } from './dto/get-profiles-query.dto';
 import { GetProfilesQueryReturnDto } from './dto/get-profiles-query-return.dto';
+import { MongoServerError } from 'mongodb';
+import { ProfileNotFoundException } from './exceptions/profile-not-found.exception';
+import { ProfileNicknameTakenException } from './exceptions/profile-nickname-taken.exception';
 
 
 @Injectable()
@@ -18,91 +21,110 @@ export class ProfileService {
     private readonly profileModel: Model<Profile>
   ) {}
 
-  async createProfile(profileDto: CreateProfileDto): Promise<Profile | HttpException> {
-    // Convert dto to type
-    const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileDto);
+  async findAll(query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto> {
+    const skip = (query.page - 1) * query.limit;
+    const [profiles, total]: [Profile[], number] = await Promise.all([
+      this.profileModel
+        .find()
+        .sort({ createdAt: -1 }) // Sort by creation date (newest first)
+        .skip(skip)
+        .limit(query.limit)
+        .exec(),
 
-    // Check if nickname already exists
-    const existingProfile = await this.profileModel.findOne({ nickname: profileType.nickname }).exec();
-    if (existingProfile) {
-      throw new HttpException(
-        { success: false, message: 'Nickname already exists!' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+      this.profileModel.countDocuments().exec()
+    ]);
 
-    // If nickname does not exist, create a new profile
-    const _profile: Profile = await this.profileModel.create(profileType);
-    return _profile;
-  }
-
-  async findAll(query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto | HttpException> {
-    try {
-      const skip = (query.page - 1) * query.limit;
-      const [profiles, total] = await Promise.all([
-        this.profileModel
-          .find()
-          .sort({ createdAt: -1 }) // Sort by creation date (newest first)
-          .skip(skip)
-          .limit(query.limit)
-          .exec(),
-
-        this.profileModel.countDocuments().exec()
-      ]);
-
-      return<GetProfilesQueryReturnDto>{
-        profiles: profiles,
-        pagination: {
-          page: query.page,
-          limit: query.limit,
-          total: total,
-          totalPages: Math.ceil(total / query.limit)
-        }
-      };
-
-    } catch (error) {
-      throw new HttpException(
-        { success: false, message: 'Failed to retrieve profiles' },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  async findOne(profileId: string): Promise<Profile | null | HttpException> {
-    //return await this.profileModel.findById( profileId );
-    const profile = await this.profileModel.findById(profileId).exec();
-    if (!profile) {
-      throw new HttpException(
-        { success: false, message: 'Profile not found!' },
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return profile;
-  }
-
-  findOneByUserId(userId: Types.ObjectId): Promise<Profile> {
-    const profile = this.profileModel.findOne({ user: userId }).exec();
-    return profile;
-
-  }
-
-  async update(profileId: string, profileUpdateDto: UpdateProfileDto): Promise<Profile | null> {
-    const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileUpdateDto);
-    return await this.profileModel.findByIdAndUpdate(
-      profileId,
-      profileType,
-      {
-        new: true,
-        runValidators: true
+    return<GetProfilesQueryReturnDto>{
+      profiles: profiles,
+      pagination: {
+        page: query.page,
+        limit: query.limit,
+        total: total,
+        totalPages: Math.ceil(total / query.limit)
       }
-    );
+    };
   }
 
-  async remove(profileId: string): Promise<Profile | null> {
-    return await this.profileModel.findByIdAndDelete(profileId);
+  async findOne(profileId: string): Promise<Profile> {
+    const profile: Profile = await this.profileModel.findById(profileId).exec();
+
+    if (!profile) {
+      throw new ProfileNotFoundException();
+    }
+
+    return profile;
   }
 
-  async removeByUserId(userId: string): Promise<Profile | null> {
-    return await this.profileModel.findOneAndDelete({ user: new Types.ObjectId(userId) });
+  async findOneByUserId(userId: Types.ObjectId): Promise<Profile> {
+    const profile: Profile = await this.profileModel.findOne({ user: userId }).exec();
+
+    if (!profile) {
+      throw new ProfileNotFoundException();
+    }
+
+    return profile;
+
+  }
+
+  async createProfile(profileDto: CreateProfileDto): Promise<Profile> {
+    try {
+      // Convert dto to type
+      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileDto);
+      const _profile: Profile = await this.profileModel.create(profileType);
+      return _profile;
+    } catch (error) {
+      if (error instanceof MongoServerError && error.code === 11000) {
+        throw new ProfileNicknameTakenException();
+      }
+
+      throw error;
+    }
+    
+  }
+
+  async update(profileId: string, profileUpdateDto: UpdateProfileDto): Promise<Profile> {
+    try {
+      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileUpdateDto);
+      const profile: Profile = await this.profileModel.findByIdAndUpdate(
+        profileId,
+        profileType,
+        {
+          new: true,
+          runValidators: true
+        }
+      );
+
+      if (!profile) {
+        throw new ProfileNotFoundException();
+      }
+
+      return profile;
+    } catch (error) {
+      if (error instanceof MongoServerError && error.code === 11000) {
+        throw new ProfileNicknameTakenException();
+      }
+
+      throw error;
+    }
+  }
+
+  async remove(profileId: string): Promise<Profile> {
+    const profile: Profile = await this.profileModel.findByIdAndDelete(profileId);
+
+    if (!profile) {
+      throw new ProfileNotFoundException();
+    }
+
+    return profile;
+  }
+
+  async removeByUserId(userId: string): Promise<Profile> {
+    const profile: Profile = await this.profileModel.findOneAndDelete({ user: new Types.ObjectId(userId) });
+    
+    if (!profile) {
+      throw new ProfileNotFoundException();
+    }
+
+    return profile;
   }
 }

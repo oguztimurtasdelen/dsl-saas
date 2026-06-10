@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { DeviceType } from './device.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -8,6 +8,7 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { GetDevicesQueryDto } from './dto/get-devices-query.dto';
 import { GetDevicesQueryReturnDto } from './dto/get-devices-query-return.dto';
+import { DeviceNotFoundException } from './exceptions/device-not-found.exception';
 
 @Injectable()
 export class DeviceService {
@@ -29,7 +30,7 @@ export class DeviceService {
       if (query.deviceStatus) filter.deviceStatus = query.deviceStatus;
     }
 
-    const [devices, total] = await Promise.all([
+    const [devices, total]: [Device[], number] = await Promise.all([
       this.deviceModel
         .find(filter)
         .sort({ createdAt: -1 }) // Sort by creation date (newest first)
@@ -55,7 +56,11 @@ export class DeviceService {
   }
 
   async findOne(_id: string): Promise<Device> {
-    return await this.deviceModel.findById(_id);
+    const device: Device = await this.deviceModel.findById(_id);
+    if (!device) {
+      throw new DeviceNotFoundException();
+    }
+    return device;
   }
 
   async create(createDeviceDto: CreateDeviceDto): Promise<Device> {
@@ -63,9 +68,9 @@ export class DeviceService {
     return await this.deviceModel.create(deviceType);
   }
 
-  async update(id: string, updateDeviceDto: UpdateDeviceDto): Promise<Device | null | HttpException> {
+  async update(id: string, updateDeviceDto: UpdateDeviceDto): Promise<Device> {
     const deviceType: DeviceType = DeviceMapper.convertDeviceDtoToType(updateDeviceDto);
-    const _device: Device | null = await this.deviceModel.findByIdAndUpdate(
+    const _device: Device = await this.deviceModel.findByIdAndUpdate(
       id, 
       deviceType,
       {
@@ -74,26 +79,19 @@ export class DeviceService {
       }
     );
 
-    if(_device) {
-      return _device;
-    } else {
-      throw new HttpException(
-        { success: false, message: 'Device not found!' },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!_device) {
+      throw new DeviceNotFoundException();
     }
+    return _device;
   }
 
-  async remove(id: string): Promise<Device | null | HttpException> {
-    const _device: Device | null = await this.deviceModel.findByIdAndDelete(id);
-    
-    if(_device) {
-      return _device;
-    } else {
-      throw new HttpException(
-        { success: false, message: 'Device not found!' },
-        HttpStatus.NOT_FOUND,
-      );
+  async remove(id: string): Promise<Device> {
+    const _device: Device = await this.deviceModel.findByIdAndDelete(id);
+
+    if (!_device) {
+      throw new DeviceNotFoundException();
     }
+    
+    return _device;
   }
 }

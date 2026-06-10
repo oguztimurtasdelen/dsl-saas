@@ -16,14 +16,14 @@ export class UserController {
   ) {}
 
   @Get()
-  async findAll(@Query() query: GetUsersQueryDto): Promise<GetUsersQueryReturnDto | HttpException> {
+  async findAll(@Query() query: GetUsersQueryDto): Promise<GetUsersQueryReturnDto> {
     return await this.userService.findAll(query);
   }
 
   @Get(':id')
   // To open jwt guard.
   //@UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string): Promise<User | null> {
+  async findOne(@Param('id') id: string): Promise<User> {
     return await this.userService.findOne(id);
   }
 

@@ -5,6 +5,8 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 import * as cookieParser from 'cookie-parser';
+import { GlobalExceptionFilter } from './customs/filters/global-exception.filter';
+
 
 const chalk = require('chalk');
 
@@ -15,6 +17,8 @@ async function bootstrap() {
     transform: true, // Ensures incoming request body is transformed to class instances
     whitelist: true, // Strips out properties that are not in the DTO
   }));
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   app.use(cookieParser());
   

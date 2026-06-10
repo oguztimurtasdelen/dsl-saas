@@ -27,12 +27,12 @@ export class DeviceController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto): Promise<Device | null | HttpException> {
+  async update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto): Promise<Device> {
     return await this.deviceService.update(id, updateDeviceDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Device | null | HttpException> {
+  async remove(@Param('id') id: string): Promise<Device> {
     return await this.deviceService.remove(id);
   }
 }
