@@ -16,7 +16,7 @@ export class TrainingController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@CurrentProfileID() user: any, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto | HttpException> {
+  findAll(@CurrentProfileID() user: any, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
     return this.trainingService.findAll(query);
   }
 
