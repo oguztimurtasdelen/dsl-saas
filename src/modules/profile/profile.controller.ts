@@ -1,36 +1,50 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Query, HttpException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './profile.schema';
 import { GetProfilesQueryDto } from './dto/get-profiles-query.dto';
 import { GetProfilesQueryReturnDto } from './dto/get-profiles-query-return.dto';
+import { JwtAuthGuard } from 'src/customs/validators/jwt-auth.guard';
+import { CurrentProfileID } from 'src/customs/decorators/current-profileID.decorator';
+import { User } from '../user/user.schema';
+import { Types } from 'mongoose';
+
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly userprofileService: ProfileService) {}
 
   @Get()
-  async findAll(@Query() query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto> {
-    return await this.userprofileService.findAll(query);
+  @UseGuards(JwtAuthGuard)
+  // Guard for second control will be here by using CurrentProfileID
+  async findAll(@Query() query: GetProfilesQueryDto, @Param('profileId') profileId: string): Promise<GetProfilesQueryReturnDto> {
+    return this.userprofileService.findAll(query, profileId);
   }
-
+  
+  // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Get(':profileId')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('profileId') profileId: string): Promise<Profile> {
     return await this.userprofileService.findOne(profileId);
   }
 
+  // This function will be called before exactly sign in, we need to define another JWT token and change the guard mechanism. - USER ID second control guard.
   @Post()
   async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
     return await this.userprofileService.createProfile(createProfileDto);
   }
 
+  // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Put(':profileId')
+  @UseGuards(JwtAuthGuard)
   async update(@Param('profileId') profileId: string, @Body() updateProfileDto: UpdateProfileDto): Promise<Profile> {
     return await this.userprofileService.update(profileId, updateProfileDto);
   }
 
+  // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Delete(':profileId')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('profileId') profileId: string): Promise<Profile> {
     return await this.userprofileService.remove(profileId);
   }

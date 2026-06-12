@@ -21,11 +21,12 @@ export class ProfileService {
     private readonly profileModel: Model<Profile>
   ) {}
 
-  async findAll(query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto> {
+  async findAll(query: GetProfilesQueryDto, profileId: string): Promise<GetProfilesQueryReturnDto> {
+    const _profile: Profile = await this.findOne(profileId);
     const skip = (query.page - 1) * query.limit;
     const [profiles, total]: [Profile[], number] = await Promise.all([
       this.profileModel
-        .find()
+        .find({ user: _profile.user })
         .sort({ createdAt: -1 }) // Sort by creation date (newest first)
         .skip(skip)
         .limit(query.limit)
@@ -45,6 +46,7 @@ export class ProfileService {
     };
   }
 
+
   async findOne(profileId: string): Promise<Profile> {
     const profile: Profile = await this.profileModel.findById(profileId).exec();
 
@@ -55,6 +57,7 @@ export class ProfileService {
     return profile;
   }
 
+  
   async findOneByUserId(userId: Types.ObjectId): Promise<Profile> {
     const profile: Profile = await this.profileModel.findOne({ user: userId }).exec();
 
@@ -81,6 +84,7 @@ export class ProfileService {
     }
     
   }
+
 
   async update(profileId: string, profileUpdateDto: UpdateProfileDto): Promise<Profile> {
     try {
