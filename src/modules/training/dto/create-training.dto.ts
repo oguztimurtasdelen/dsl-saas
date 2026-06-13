@@ -1,6 +1,6 @@
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, ValidateNested } from "class-validator";
 import { Types } from "mongoose";
-import { ReflexTrainingDto } from "./reflex-training.dto";
+import { ReflexTrainingDto } from "../reflex/dto/reflex-training.dto";
 import { Type } from "class-transformer";
 import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
 import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
@@ -13,7 +13,7 @@ export class CreateTrainingDto {
     device: Types.ObjectId;
 
     @IsNotEmpty({message: "trainingType cannot be empty!"})
-    @IsEnum(TrainingTypeEnum, {message: 'trainingType    is not valid!'})
+    @IsEnum(TrainingTypeEnum, {message: 'trainingType is not valid!'})
     trainingType: TrainingTypeEnum;
 
     @IsNotEmpty({message: "trainingStatus cannot be empty!"})

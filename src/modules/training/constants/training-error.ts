@@ -13,4 +13,9 @@ export const TrainingErrors = {
         code: 'TRAINING_CANCELLED',
         message: 'Training is cancelled',
     },
+
+    TYPE_NOT_EXIST: {
+        code: 'TRAINING_TYPE_NOT_EXIST',
+        message: 'Training type not exist'
+    }
 }

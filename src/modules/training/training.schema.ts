@@ -2,27 +2,39 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { Device } from "../device/device.schema";
 import { Profile } from "../profile/profile.schema";
-import { ReflexTrainingDto } from "./dto/reflex-training.dto";
+import { ReflexTrainingDto } from "./reflex/dto/reflex-training.dto";
 import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
 import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
+import { ReflexTrainingResultDto } from "./reflex/dto/reflex-training-result.dto";
 
-@Schema({timestamps: true})
+@Schema({
+    timestamps: true,
+    toJSON: { virtuals: true, versionKey: false },
+    'id': false
+})
 export class Training extends Document {
 
     _id: Types.ObjectId;
 
-    @Prop({unique: false, ref: Profile.name})
+    @Prop({
+        type: Types.ObjectId,
+        unique: false, 
+        ref: Profile.name
+    })
     profile: Types.ObjectId;
     
-    @Prop({unique: false, ref: Device.name})
+    @Prop({
+        type: Types.ObjectId,
+        unique: false, 
+        ref: Device.name
+    })
     device: Types.ObjectId;
     
    @Prop({
         unique: false, 
         required: true, 
         type: String, 
-        enum: TrainingTypeEnum, 
-        default: TrainingTypeEnum.REFLEX
+        enum: TrainingTypeEnum
     })
     trainingType: TrainingTypeEnum;
 
@@ -35,8 +47,17 @@ export class Training extends Document {
     })
     trainingStatus: TrainingStatusEnum
     
-    @Prop({unique: false, required: true})
-    trainingProgram: ReflexTrainingDto;
+    @Prop({
+        unique: false, 
+        required: true
+    })
+    trainingProgram: ReflexTrainingDto[];
+
+    @Prop({
+        unique: false,
+        required: true
+    })
+    trainingResult: ReflexTrainingResultDto[];
 
 }
 

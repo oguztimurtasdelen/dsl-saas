@@ -11,7 +11,13 @@ export class Profile extends Document {
 
     _id: Types.ObjectId;
 
-    @Prop({type: Types.ObjectId, required: true, unique: true, ref: 'User', immutable: true})
+    @Prop({
+        type: Types.ObjectId, 
+        required: true, 
+        unique: true, 
+        ref: 'User', 
+        immutable: true
+    })
     user: Types.ObjectId;
 
     @Prop({
@@ -26,10 +32,17 @@ export class Profile extends Document {
     })
     nickname: string;
 
-    @Prop({type: String, required: false})
+    @Prop({
+        type: String, 
+        required: false
+    })
     avatar: string;
 
-    @Prop({type: Boolean, required: true, default: true})
+    @Prop({
+        type: Boolean, 
+        required: true, 
+        default: true
+    })
     isActive: boolean;
 }
 

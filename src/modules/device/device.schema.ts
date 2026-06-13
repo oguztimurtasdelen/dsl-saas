@@ -2,7 +2,11 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { DeviceStatusEnum } from "src/customs/utils/deviceStatus.enum";
 
-@Schema({timestamps: true})
+@Schema({
+    timestamps: true,
+    toJSON: { virtuals: true, versionKey: false },
+    'id': false
+})
 export class Device extends Document {
 
     _id: Types.ObjectId;
