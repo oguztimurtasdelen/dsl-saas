@@ -8,11 +8,12 @@ import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
 export class TrainingMapper {
     static convertTrainingDtoToType(dto: CreateTrainingDto | UpdateTrainingDto): TrainingType {
         return <TrainingType>{
-            profile: new Types.ObjectId(dto.profile),
-            device: new Types.ObjectId(dto.device),
+            profile: dto.profile ? new Types.ObjectId(dto.profile) : dto.profile,
+            device: dto.device ? new Types.ObjectId(dto.device) : dto.device,
             trainingType: TrainingTypeEnum[dto.trainingType],
             trainingStatus: TrainingStatusEnum[dto.trainingStatus],
-            trainingProgram: dto.trainingProgram
+            trainingProgram: dto.trainingProgram,
+            trainingResult: (dto as UpdateTrainingDto).trainingResult
         };
     }
 }

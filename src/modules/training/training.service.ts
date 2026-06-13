@@ -50,7 +50,7 @@ export class TrainingService {
   }
 
   async findOne(id: string): Promise<Training> {
-    const training: Training = await this.trainingModel.findById(id);
+    const training: Training | null = await this.trainingModel.findById(id).exec();
     if (!training) {
       throw new TrainingNotFoundException();
     }
@@ -59,9 +59,9 @@ export class TrainingService {
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
-    const _training: Training = await this.trainingModel.create(trainingType);
+    const training: Training = await this.trainingModel.create(trainingType);
 
-    return _training;
+    return training;
   }
 
   async update(id: string, updateTrainingDto: UpdateTrainingDto): Promise<Training> {
@@ -75,7 +75,7 @@ export class TrainingService {
       }
     );
     if (!training) {
-      throw new NotFoundException(`Training with ID ${id} not found`);
+      throw new TrainingNotFoundException();
     }
     return training;
   }
@@ -83,7 +83,7 @@ export class TrainingService {
   async remove(id: string): Promise<Training> {
     const training: Training = await this.trainingModel.findByIdAndDelete(id);
     if (!training) {
-      throw new NotFoundException(`Training with ID ${id} not found`);
+      throw new TrainingNotFoundException();
     }
     return training;
   }
