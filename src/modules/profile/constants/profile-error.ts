@@ -8,6 +8,11 @@ export const ProfileErrors = {
         code: 'NICKNAME_TAKEN',
         message: 'Nickname is already taken'
     },
+    
+    NOT_CREATE_YET: {
+        code: 'NOT_CREATED_YET',
+        message: 'Profile has not been created yet'
+    },
 
     
 }

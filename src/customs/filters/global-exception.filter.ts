@@ -16,10 +16,13 @@ export class GlobalExceptionFilter implements ExceptionFilter
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
 
+    
+    // The log will be work if the cathced exception not belongs to HttpException, otherwise we can't see the whats going on the backgorund.
+    exception instanceof HttpException ? null : console.log('This log created by GlobalExceptionFilter because of the system faced exception different than HttpException. Here is your exception which is handled by generic handler. Exception: ', exception) ;
+    
     const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
     const response = exception instanceof HttpException ? exception.getResponse() : null;
-
+    
     res.status(status).json({
       success: false,
       statusCode: status,

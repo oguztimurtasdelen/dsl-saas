@@ -1,5 +1,5 @@
 export interface IAccessTokenPayload {
-  sub: string; // Subject (usually the user ID)
+  sub: string; // Subject (used exactly profileID)
   // You can add any custom claims you want here, for example:
   // email?: string;
   // roles?: string[];

@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'src/customs/validators/jwt-auth.guard';
 import { CurrentProfileID } from 'src/customs/decorators/current-profileID.decorator';
 import { User } from '../user/user.schema';
 import { Types } from 'mongoose';
+import { JwtCreateProfileGuard } from 'src/customs/validators/jwt-create-profile.guard';
 
 
 @Controller('profile')
@@ -31,6 +32,7 @@ export class ProfileController {
 
   // This function will be called before exactly sign in, we need to define another JWT token and change the guard mechanism. - USER ID second control guard.
   @Post()
+  @UseGuards(JwtCreateProfileGuard)
   async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
     return await this.userprofileService.createProfile(createProfileDto);
   }

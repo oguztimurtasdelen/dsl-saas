@@ -13,6 +13,9 @@ import { UserMapper } from '../user/user.mapper';
 import { UserService } from '../user/user.service';
 import { ProfileService } from '../profile/profile.service';
 import { IAccessTokenPayload } from 'src/customs/interfaces/accessTokenPayload.interface';
+import { ProfileNotFoundException } from '../profile/exceptions/profile-not-found.exception';
+import { ProfileNotCreatedYetException } from '../profile/exceptions/profile-not-created-yet.exception';
+import { ICreateProfileTokenPayload } from 'src/customs/interfaces/createProfileTokenPayload.interface';
 
 
 const chalk = require('chalk');
@@ -45,6 +48,16 @@ export class AuthenticationService {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
       expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
       issuer: 'dsl-saas',
+      audience: 'dsl-ionic-app-profile',
+      jwtid: crypto.randomUUID()
+    });
+  }
+
+  generateCreateProfileToken(payload: any): string {
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_CREATEPROFILE_TOKEN_SECRET_KEY,
+      expiresIn: process.env.JWT_CREATEPROFILE_TOKEN_EXPIRES_IN,
+      issuer: 'dsl-saas',
       audience: 'dsl-ionic-app-user',
       jwtid: crypto.randomUUID()
     });
@@ -56,7 +69,7 @@ export class AuthenticationService {
       secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
       expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
       issuer: 'dsl-saas',
-      audience: 'dsl-ionic-app-user',
+      audience: 'dsl-ionic-app-user-profile',
       jwtid: crypto.randomUUID()
     });
   }
@@ -109,7 +122,7 @@ export class AuthenticationService {
 
   async signInUser(signInDto: SignInDto) {
     const _user: User = await this.userService.findOneByEmail(signInDto.email);
-    const _profile: Profile = await this.profileService.findOneByUserId(_user._id);
+    let _profile: Profile;
     const isPasswordValid = _user ? await this.validatePass(signInDto.password, _user.password) : false;
 
     if(!_user || !isPasswordValid) {
@@ -126,20 +139,47 @@ export class AuthenticationService {
       );
     }
 
+    try {
+      _profile = await this.profileService.findOneByUserId(_user._id);
+    } catch (error) {
+      if (error instanceof ProfileNotFoundException) {
+        const profileTokenpayload: ICreateProfileTokenPayload = {
+          sub: _user._id.toString()
+        };
+        
+        const profileToken = this.generateCreateProfileToken(profileTokenpayload);
+
+        console.log('profile için gerekli token: ', profileToken);
+        console.log('profile için kullanılan payload: ', this.jwtService.decode(profileToken));
+
+        return <SignInReturnDto>({
+          success: true,
+          message: 'User signed in successfully!',
+          isThereProfile: false,
+          profileToken: profileToken,
+          user: {
+            _id: _user._id.toString(),
+            name: _user.name,
+            surname: _user.surname
+          }
+        });
+      }
+    }
+
     console.log( chalk.bgGreen(_user.email), chalk.green("sign in the system at "), chalk.green(new Date().toLocaleString()) );
     console.log( chalk.bgRed("______________________________________________________________"));
 
 
     // Create JWT token
     // The payload can contain any data you want to include in the token
-    const payload: IAccessTokenPayload = {
+    const accessTokenPayload: IAccessTokenPayload = {
       sub: _profile._id.toString()
     };
 
-    const accessToken = this.generateAccessToken(payload);
-    const refreshToken = this.generateRefreshToken(payload);
+    const accessToken = this.generateAccessToken(accessTokenPayload);
+    const refreshToken = this.generateRefreshToken(accessTokenPayload);
     
-    console.log('payload',this.jwtService.decode(accessToken));
+    console.log('accessTokenPayload',this.jwtService.decode(accessToken));
     console.log( chalk.bgYellow(_user.email), chalk.yellow("with access token "), chalk.yellow(accessToken) );
     console.log( chalk.bgBlue(_user.email), chalk.yellow("with refresh token "), chalk.blue(refreshToken) );
 
@@ -148,6 +188,7 @@ export class AuthenticationService {
       message: 'User signed in successfully!',
       accessToken: accessToken,
       refreshToken: refreshToken,
+      isThereProfile: true,
       user: {
         _id: _user._id.toString(),
         name: _user.name,

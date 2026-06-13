@@ -79,7 +79,6 @@ export class ProfileService {
       if (error instanceof MongoServerError && error.code === 11000) {
         throw new ProfileNicknameTakenException();
       }
-
       throw error;
     }
     

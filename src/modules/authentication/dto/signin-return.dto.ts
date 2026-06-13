@@ -6,6 +6,8 @@ export class SignInReturnDto {
   message: string;
   accessToken?: string; // Optional, if you want to return a JWT token or similar
   refreshToken?: string; // Optional, if you want to return a refresh token
+  isThereProfile?: boolean; // Optional, to indicate if the user has a profile or not
+  profileToken?: string; // Optional, if you want to return a token related to the profile
   user?: SignInReturnUserDto 
 }
 
@@ -13,7 +15,7 @@ export class SignInReturnUserDto {
   _id: string;
   name: string;
   surname: string;
-  profile: SignInReturnProfileDto;
+  profile?: SignInReturnProfileDto;
 }
 
 export class SignInReturnProfileDto {

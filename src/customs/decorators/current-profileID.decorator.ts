@@ -6,7 +6,6 @@ export const CurrentProfileID = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): string => {
     const request = ctx.switchToHttp().getRequest<{ user: IAccessTokenPayload }>();
     // The jwt-auth.guard adds the user(means that payload in the token as value of sub key) to the request object, so we can access it here.
-    console.log('user decorator',request.user);
     return request.user.sub;
   },
 );

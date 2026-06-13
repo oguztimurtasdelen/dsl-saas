@@ -5,6 +5,7 @@ import { ProfileModule } from '../profile/profile.module';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/customs/validators/jwt.strategy';
+import { JwtCreateProfileStrategy } from 'src/customs/validators/jwt-create-profile.strategy';
 
 
 @Module({
@@ -18,7 +19,8 @@ import { JwtStrategy } from 'src/customs/validators/jwt.strategy';
   controllers: [AuthenticationController],
   providers: [
     AuthenticationService,
-    JwtStrategy
+    JwtStrategy,
+    JwtCreateProfileStrategy
   ],
 })
 export class AuthenticationModule {}
