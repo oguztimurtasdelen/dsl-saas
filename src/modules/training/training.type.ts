@@ -1,8 +1,8 @@
 import { Types } from "mongoose"
-import { ReflexTrainingDto } from "./reflex/dto/reflex-training.dto";
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
-import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
-import { ReflexTrainingResultDto } from "./reflex/dto/reflex-training-result.dto";
+import { ReflexTrainingDto } from "./training-types/reflex/dto/reflex.program.dto";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
+import { TrainingStatusEnum } from "src/modules/training/enums/trainingStatus.enum";
+import { ReflexTrainingResultDto } from "./training-types/reflex/dto/reflex.result.dto";
 
 
 export type TrainingType = {
@@ -10,6 +10,6 @@ export type TrainingType = {
     device: Types.ObjectId;
     trainingType: TrainingTypeEnum
     trainingStatus: TrainingStatusEnum;
-    trainingProgram: ReflexTrainingDto[];
-    trainingResult: ReflexTrainingResultDto[];
+    trainingProgram: any;
+    trainingResult: any;
 }

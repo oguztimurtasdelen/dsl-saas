@@ -1,8 +1,8 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
 import { TermsAndConditionsDto } from "./dto/termsAndConditions.dto";
-import { UserRoleEnum } from "src/customs/utils/userrole.enum";
-import { UserTypeEnum } from "src/customs/utils/usertype.enum";
+import { UserRoleEnum } from "src/modules/user/enums/userrole.enum";
+import { UserTypeEnum } from "src/modules/user/enums/usertype.enum";
 
 
 @Schema({

@@ -1,5 +1,5 @@
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum"
-import { ReflexTrainingDto } from "../training/reflex/dto/reflex-training.dto";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum"
+import { ReflexTrainingDto } from "../training/training-types/reflex/dto/reflex.program.dto";
 
 export type TrainingLevelType = {
     trainingType: TrainingTypeEnum;

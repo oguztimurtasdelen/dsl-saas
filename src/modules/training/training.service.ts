@@ -9,6 +9,7 @@ import { TrainingMapper } from './training.mapper';
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
 import { TrainingNotFoundException } from './exceptions/training-not-found.exception';
+import { TrainingFactory } from './factory/training.factory';
 
 @Injectable()
 export class TrainingService {
@@ -59,6 +60,9 @@ export class TrainingService {
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
+    const handler = TrainingFactory.get(trainingType.trainingType);
+    trainingType.trainingProgram = handler.buildProgram(trainingType.trainingProgram);
+
     const training: Training = await this.trainingModel.create(trainingType);
 
     return training;

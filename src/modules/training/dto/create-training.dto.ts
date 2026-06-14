@@ -1,9 +1,9 @@
-import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, ValidateNested } from "class-validator";
+import { IsBoolean, IsDateString, IsDefined, IsEnum, IsNotEmpty, ValidateNested } from "class-validator";
 import { Types } from "mongoose";
-import { ReflexTrainingDto } from "../reflex/dto/reflex-training.dto";
+import { ReflexTrainingDto } from "../training-types/reflex/dto/reflex.program.dto";
 import { Type } from "class-transformer";
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
-import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
+import { TrainingStatusEnum } from "src/modules/training/enums/trainingStatus.enum";
 
 export class CreateTrainingDto {
     @IsNotEmpty({message: "profileId cannot be empty"})
@@ -20,8 +20,7 @@ export class CreateTrainingDto {
     @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
     trainingStatus: TrainingStatusEnum;
 
-    @ValidateNested()
-    @Type(() => ReflexTrainingDto)
-    trainingProgram: ReflexTrainingDto[];
+    @IsDefined()
+    trainingProgram: any;
 
 }

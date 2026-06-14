@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { DeviceStatusEnum } from 'src/customs/utils/deviceStatus.enum';
+import { DeviceStatusEnum } from 'src/modules/device/enums/deviceStatus.enum';
 
 export class GetDevicesQueryDto {
     @IsOptional()

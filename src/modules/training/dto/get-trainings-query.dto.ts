@@ -1,7 +1,7 @@
 import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TrainingStatusEnum } from 'src/customs/utils/trainingStatus.enum';
-import { TrainingTypeEnum } from 'src/customs/utils/trainingType.enum';
+import { TrainingStatusEnum } from 'src/modules/training/enums/trainingStatus.enum';
+import { TrainingTypeEnum } from 'src/modules/training/enums/trainingType.enum';
 
 export class GetTrainingsQueryDto {
     @IsOptional()

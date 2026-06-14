@@ -1,5 +1,5 @@
 import { IsMACAddress, IsNotEmpty, IsEnum, IsOptional } from "class-validator";
-import { DeviceStatusEnum } from "src/customs/utils/deviceStatus.enum";
+import { DeviceStatusEnum } from "src/modules/device/enums/deviceStatus.enum";
 
 export class CreateDeviceDto {
 

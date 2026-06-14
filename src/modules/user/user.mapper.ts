@@ -1,8 +1,8 @@
-import { UserRoleEnum } from "src/customs/utils/userrole.enum";
+import { UserRoleEnum } from "src/modules/user/enums/userrole.enum";
 import { SignUpDto } from "../authentication/dto/signup.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserType } from "./user.type";
-import { UserTypeEnum } from "src/customs/utils/usertype.enum";
+import { UserTypeEnum } from "src/modules/user/enums/usertype.enum";
 
 export class UserMapper {
     static convertUserDtoToType(dto: SignUpDto | UpdateUserDto): UserType {

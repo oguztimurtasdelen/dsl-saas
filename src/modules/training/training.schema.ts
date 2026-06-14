@@ -1,11 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
+import { Document, Types, Schema as mongooseSchema } from "mongoose";
 import { Device } from "../device/device.schema";
 import { Profile } from "../profile/profile.schema";
-import { ReflexTrainingDto } from "./reflex/dto/reflex-training.dto";
-import { TrainingStatusEnum } from "src/customs/utils/trainingStatus.enum";
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
-import { ReflexTrainingResultDto } from "./reflex/dto/reflex-training-result.dto";
+import { TrainingStatusEnum } from "src/modules/training/enums/trainingStatus.enum";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
 
 @Schema({
     timestamps: true,
@@ -49,15 +47,17 @@ export class Training extends Document {
     
     @Prop({
         unique: false, 
-        required: true
+        required: true,
+        type: mongooseSchema.Types.Mixed
     })
-    trainingProgram: ReflexTrainingDto[];
+    trainingProgram: unknown;
 
     @Prop({
         unique: false,
-        required: true
+        required: true,
+        type: mongooseSchema.Types.Mixed
     })
-    trainingResult: ReflexTrainingResultDto[];
+    trainingResult: unknown;
 
 }
 

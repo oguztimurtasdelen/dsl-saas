@@ -1,4 +1,4 @@
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
 import { CreateTrainingLevelDto } from "./dto/create-training-level.dto";
 import { UpdateTrainingLevelDto } from "./dto/update-training-level.dto";
 import { TrainingLevelType } from "./training-level.type";

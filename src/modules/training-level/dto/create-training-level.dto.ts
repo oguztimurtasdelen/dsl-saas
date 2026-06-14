@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsNotEmpty, IsNumber, ValidateNested } from "class-validator";
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
-import { ReflexTrainingDto } from "src/modules/training/reflex/dto/reflex-training.dto";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
+import { ReflexTrainingDto } from "src/modules/training/training-types/reflex/dto/reflex.program.dto";
 
 export class CreateTrainingLevelDto {
     @IsNotEmpty({message: "trainingType cannot be empty!"})

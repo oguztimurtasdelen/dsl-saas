@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "node_modules/@nestjs/mongoose/dist";
 import { Document, Types } from "mongoose";
-import { TrainingTypeEnum } from "src/customs/utils/trainingType.enum";
-import { ReflexTrainingDto } from "../training/reflex/dto/reflex-training.dto";
+import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
+import { ReflexTrainingDto } from "../training/training-types/reflex/dto/reflex.program.dto";
 
 
 @Schema({

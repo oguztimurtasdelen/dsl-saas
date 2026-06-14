@@ -1,9 +1,9 @@
 import { IsBoolean, IsDate, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsObject, IsOptional, IsPhoneNumber, IsStrongPassword, Matches, Validate, ValidateNested,  } from "class-validator";
 import { Transform, Type } from "class-transformer";
-import { UserRoleEnum } from "src/customs/utils/userrole.enum";
+import { UserRoleEnum } from "src/modules/user/enums/userrole.enum";
 import { TermsAndConditionsDto } from "src/modules/user/dto/termsAndConditions.dto";
 import { IsPasswordValidationMatchConstraint } from "src/customs/validators/isPasswordValidationMatch.validator";
-import { UserTypeEnum } from "src/customs/utils/usertype.enum";
+import { UserTypeEnum } from "src/modules/user/enums/usertype.enum";
 
 export class SignUpDto {
     @IsNotEmpty({message: 'Name cannot be empty!'})

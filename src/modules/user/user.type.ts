@@ -1,7 +1,7 @@
-import { UserRoleEnum } from "src/customs/utils/userrole.enum";
+import { UserRoleEnum } from "src/modules/user/enums/userrole.enum";
 import { TermsAndConditionsDto } from "./dto/termsAndConditions.dto";
 import { Types } from "mongoose";
-import { UserTypeEnum } from "src/customs/utils/usertype.enum";
+import { UserTypeEnum } from "src/modules/user/enums/usertype.enum";
 
 
 export type UserType = {
