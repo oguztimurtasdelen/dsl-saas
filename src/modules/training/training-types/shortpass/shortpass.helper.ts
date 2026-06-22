@@ -1,18 +1,41 @@
+import { plainToInstance } from "class-transformer";
+import { validateSync } from "class-validator";
+import { TrainingHandler } from "../../training.contracts";
 import { ShortPassTrainingDto } from "./dto/shortpass.program.dto";
 import { ShortPassTrainingResultDto } from "./dto/shortpass.result.dto";
+import { BadRequestException } from "@nestjs/common";
 
 
-export class ShortPassTrainingHandler {
+export class ShortPassTrainingHandler implements TrainingHandler {
 
-    buildProgram(trainingProgram: any): ShortPassTrainingDto[] {
-        console.log(trainingProgram);
-        console.log(typeof trainingProgram);
-        console.log(Array.isArray(trainingProgram));
+    getHandlerName(): string {
+        return 'ShortPassTrainingHandler';
+    }
 
-        return trainingProgram.map(item => ({
-            sensorNo: item.sensorNo,
-            duration: item.duration
+    validateTrainingProgram(trainingProgram: ShortPassTrainingDto[]): void {
+        const program = trainingProgram.map(item => plainToInstance(ShortPassTrainingDto, item));
+        const errors = program.flatMap(item => validateSync(item, { 
+            whitelist: true, 
+            forbidNonWhitelisted: true,
+            skipMissingProperties: false
         }));
+
+        if (errors.length > 0) {
+            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ShortPassTrainingDto', errors});
+        }
+    }
+
+    validateTrainingResult(trainingResult: ShortPassTrainingResultDto[]): void {
+        const program = trainingResult.map(item => plainToInstance(ShortPassTrainingResultDto, item));
+        const errors = program.flatMap(item => validateSync(item, { 
+            whitelist: true, 
+            forbidNonWhitelisted: true,
+            skipMissingProperties: false
+        }));
+
+        if (errors.length > 0) {
+            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ShortPassTrainingResultDto', errors});
+        }
     }
 
     calculateResult(trainingResult: ShortPassTrainingResultDto[]) {
@@ -24,9 +47,5 @@ export class ShortPassTrainingHandler {
             fail: trainingResult.length - success,
             averageReactionTime: trainingResult.reduce((a, b) => a + b.actionTime, 0) / trainingResult.length
         }
-    }
-
-    getHandlerName(): string {
-        return 'ShortPassTrainingHandler';
     }
 }

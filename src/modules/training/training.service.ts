@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
 import { TrainingType } from './training.type';
@@ -59,10 +59,12 @@ export class TrainingService {
   }
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
+    // Get the appropriate handler based on the training type.
+    const handler = TrainingFactory.get(createTrainingDto.trainingType);
+    // Validate the training program using the handler.
+    handler.validateTrainingProgram(createTrainingDto.trainingProgram);
+    // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
-    const handler = TrainingFactory.get(trainingType.trainingType);
-    trainingType.trainingProgram = handler.buildProgram(trainingType.trainingProgram);
-
     const training: Training = await this.trainingModel.create(trainingType);
 
     return training;

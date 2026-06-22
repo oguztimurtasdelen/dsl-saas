@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 import * as cookieParser from 'cookie-parser';
 import { GlobalExceptionFilter } from './customs/filters/global-exception.filter';
@@ -16,6 +16,16 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     transform: true, // Ensures incoming request body is transformed to class instances
     whitelist: true, // Strips out properties that are not in the DTO
+
+    exceptionFactory: (errors) => {
+      const messages = errors.flatMap(error => Object.values(error.constraints ?? {}));
+
+      return new BadRequestException({
+        code: 'VALIDATION_ERROR',
+        message: 'Validation failed',
+        errors: messages,
+      });
+    }
   }));
 
   app.useGlobalFilters(new GlobalExceptionFilter());

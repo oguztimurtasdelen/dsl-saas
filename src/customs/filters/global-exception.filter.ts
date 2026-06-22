@@ -30,6 +30,7 @@ export class GlobalExceptionFilter implements ExceptionFilter
       statusCode: status,
       message: (response as any)?.message || 'Internal server error',
       code: (response as any)?.code || 'INTERNAL_SERVER_ERROR',
+      errors: (response as any)?.errors || null,
       path: req.url,
       timestamp: new Date().toISOString(),
     });

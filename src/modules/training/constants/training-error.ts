@@ -17,5 +17,15 @@ export const TrainingErrors = {
     TYPE_NOT_EXIST: {
         code: 'TRAINING_TYPE_NOT_EXIST',
         message: 'Training type not exist'
+    },
+
+    TRAINING_PROGRAM_INVALID: {
+        code: 'TRAINING_PROGRAM_INVALID',
+        message: 'Training program is invalid'
+    },
+
+    TRAINING_RESULT_INVALID: {
+        code: 'TRAINING_RESULT_INVALID',
+        message: 'Training result is invalid'
     }
 }
