@@ -6,6 +6,7 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import configuration from './config/configuration';
 import * as cookieParser from 'cookie-parser';
 import { GlobalExceptionFilter } from './customs/filters/global-exception.filter';
+import { ErrorLogService } from './modules/error-log/error-log.service';
 
 
 const chalk = require('chalk');
@@ -28,7 +29,8 @@ async function bootstrap() {
     }
   }));
 
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  const errorLogService = app.get(ErrorLogService);
+  app.useGlobalFilters(new GlobalExceptionFilter(errorLogService));
 
   app.use(cookieParser());
   

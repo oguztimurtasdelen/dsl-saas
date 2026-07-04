@@ -7,24 +7,31 @@ import {
 } from '@nestjs/common';
 
 import { Request, Response } from 'express';
+import { ErrorLogService } from '../../modules/error-log/error-log.service';
 
 @Catch()
-export class GlobalExceptionFilter implements ExceptionFilter
-{
-  catch(exception: any, host: ArgumentsHost) {
-    console.log("Global Exception Filter catched: " + exception);
-    console.log(exception);
+export class GlobalExceptionFilter implements ExceptionFilter {
+  constructor(private readonly errorLogService: ErrorLogService) {}
+
+  async catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
 
-    
-    // The log will be work if the cathced exception not belongs to HttpException, otherwise we can't see the whats going on the backgorund.
-    exception instanceof HttpException ? null : console.log('This log created by GlobalExceptionFilter because of the system faced exception different than HttpException. Here is your exception which is handled by generic handler. Exception: ', exception) ;
-    
     const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const response = exception instanceof HttpException ? exception.getResponse() : null;
-    
+
+    try {
+      await this.errorLogService.createFromException({
+        exception,
+        request: req,
+        statusCode: status,
+        response: response as any,
+      });
+    } catch (error) {
+      console.error('Failed to persist application error:', error);
+    }
+
     res.status(status).json({
       success: false,
       statusCode: status,

@@ -12,6 +12,7 @@ import { DeviceModule } from "./modules/device/device.module";
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TrainingModule } from './modules/training/training.module';
 import { TrainingLevelModule } from './modules/training-level/training-level.module';
+import { ErrorLogModule } from './modules/error-log/error-log.module';
 
 
 const chalk = require('chalk');
@@ -26,11 +27,12 @@ const chalk = require('chalk');
       dbName: configuration().database.name
   }),
     AuthenticationModule,
+    ErrorLogModule,
     UserModule,
     ProfileModule,
     DeviceModule,
     TrainingModule,
-    TrainingLevelModule
+    TrainingLevelModule,
   ],
   controllers: [AppController],
   providers: [AppService],
