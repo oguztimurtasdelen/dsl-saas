@@ -51,7 +51,7 @@ export class TrainingService {
   }
 
   async findOne(id: string): Promise<Training> {
-    const training: Training | null = await this.trainingModel.findById(id).exec();
+    const training: Training = await this.trainingModel.findById(id).exec();
     if (!training) {
       throw new TrainingNotFoundException();
     }
@@ -74,9 +74,14 @@ export class TrainingService {
     // Get the appropriate handler based on the training type.
     const handler = TrainingFactory.get(updateTrainingDto.trainingType);
     // Validate the training result using the handler only if it exists.
-    handler.validateTrainingResult(updateTrainingDto.trainingResult)
+    if (updateTrainingDto.trainingResult) {
+      handler.validateTrainingResult(updateTrainingDto.trainingResult);
+      updateTrainingDto.trainingMetrics = handler.calculateResult(updateTrainingDto.trainingResult);
+    }
+    
     // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(updateTrainingDto);
+
     const training: Training = await this.trainingModel.findByIdAndUpdate(
       id,
       trainingType,
@@ -89,7 +94,7 @@ export class TrainingService {
     if (!training) {
       throw new TrainingNotFoundException();
     }
-    
+
     return training;
   }
 

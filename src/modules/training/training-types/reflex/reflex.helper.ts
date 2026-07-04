@@ -6,6 +6,7 @@ import { ReflexTrainingResultDto } from "./dto/reflex.result.dto";
 import { BadRequestException } from "@nestjs/common";
 import { TrainingProgramInvalidException } from "../../exceptions/training-program-invalid.exception";
 import { TrainingResultInvalidException } from "../../exceptions/training-result-invalid.exception";
+import { ReflexTrainingMetricsDto } from "./dto/reflex.metrics.dto";
 
 export class ReflexTrainingHandler implements TrainingHandler {
 
@@ -28,7 +29,7 @@ export class ReflexTrainingHandler implements TrainingHandler {
 
     validateTrainingResult(trainingResult: ReflexTrainingResultDto[]): void {
         if (!trainingResult) return;
-        
+
         const _trainingResult = trainingResult.map(item => plainToInstance(ReflexTrainingResultDto, item));
         const errors = _trainingResult.flatMap(item => validateSync(item, { 
             whitelist: true, 
@@ -41,14 +42,17 @@ export class ReflexTrainingHandler implements TrainingHandler {
         }
     }
 
-    calculateResult(trainingResult: ReflexTrainingResultDto[]) {
-        const success = trainingResult.filter(r => r.isSuccess).length;
+    calculateResult(trainingResult: ReflexTrainingResultDto[]): ReflexTrainingMetricsDto {
+        if (!trainingResult) return null;
 
-        return {
-            total: trainingResult.length,
+        const success = trainingResult.filter(r => r.isSuccess).length;
+        const total = trainingResult.length;
+
+        return<ReflexTrainingMetricsDto>{
+            total:total,
             success: success,
-            fail: trainingResult.length - success,
-            averageReactionTime: trainingResult.reduce((a, b) => a + b.actionTime, 0) / trainingResult.length
-        }
+            fail: total - success,
+            averageReactionTime: total === 0 ? 0 : trainingResult.reduce((a, b) => a + b.actionTime, 0) / total
+        };
     }
 }

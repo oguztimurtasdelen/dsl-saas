@@ -61,6 +61,14 @@ export class Training extends Document {
     })
     trainingResult: unknown;
 
+    @Prop({
+        unique: false,
+        required: false,
+        type: mongooseSchema.Types.Mixed,
+        default: null
+    })
+    trainingMetrics: unknown;
+
 }
 
 export const TrainingSchema = SchemaFactory.createForClass(Training);

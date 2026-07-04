@@ -10,4 +10,5 @@ export type TrainingType = {
     trainingStatus: TrainingStatusEnum;
     trainingProgram: any;
     trainingResult: any;
+    trainingMetrics: any;
 }
