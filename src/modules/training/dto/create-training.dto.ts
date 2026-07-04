@@ -1,7 +1,5 @@
-import { IsBoolean, IsDateString, IsDefined, IsEnum, IsNotEmpty, ValidateNested } from "class-validator";
+import { IsDefined, IsEnum, IsNotEmpty, IsOptional, ValidateIf } from "class-validator";
 import { Types } from "mongoose";
-import { ReflexTrainingDto } from "../training-types/reflex/dto/reflex.program.dto";
-import { Type } from "class-transformer";
 import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
 import { TrainingStatusEnum } from "src/modules/training/enums/trainingStatus.enum";
 
@@ -20,7 +18,11 @@ export class CreateTrainingDto {
     @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
     trainingStatus: TrainingStatusEnum;
 
-    @IsDefined()
+    @IsNotEmpty({message: "trainingProgram cannot be empty!"})
     trainingProgram: any;
+
+    @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.COMPLETED) // Only validate trainingResult if trainingStatus is COMPLETED
+    @IsDefined()
+    trainingResult: any;
 
 }

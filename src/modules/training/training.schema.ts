@@ -47,15 +47,17 @@ export class Training extends Document {
     
     @Prop({
         unique: false, 
-        required: true,
-        type: mongooseSchema.Types.Mixed
+        required: false,
+        type: mongooseSchema.Types.Mixed,
+        default: null
     })
     trainingProgram: unknown;
 
     @Prop({
         unique: false,
-        required: true,
-        type: mongooseSchema.Types.Mixed
+        required: false,
+        type: mongooseSchema.Types.Mixed,
+        default: null
     })
     trainingResult: unknown;
 

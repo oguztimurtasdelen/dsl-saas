@@ -13,7 +13,7 @@ export class TrainingMapper {
             trainingType: TrainingTypeEnum[dto.trainingType],
             trainingStatus: TrainingStatusEnum[dto.trainingStatus],
             trainingProgram: dto.trainingProgram,
-            trainingResult: (dto as UpdateTrainingDto).trainingResult
+            trainingResult: dto.trainingResult //(dto as UpdateTrainingDto).trainingResult
         };
     }
 }

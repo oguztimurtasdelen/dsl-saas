@@ -61,7 +61,7 @@ export class TrainingService {
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
     // Get the appropriate handler based on the training type.
     const handler = TrainingFactory.get(createTrainingDto.trainingType);
-    // Validate the training program using the handler.
+    // Validate the training program using the handler only if it exists.
     handler.validateTrainingProgram(createTrainingDto.trainingProgram);
     // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
@@ -71,6 +71,11 @@ export class TrainingService {
   }
 
   async update(id: string, updateTrainingDto: UpdateTrainingDto): Promise<Training> {
+    // Get the appropriate handler based on the training type.
+    const handler = TrainingFactory.get(updateTrainingDto.trainingType);
+    // Validate the training result using the handler only if it exists.
+    handler.validateTrainingResult(updateTrainingDto.trainingResult)
+    // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(updateTrainingDto);
     const training: Training = await this.trainingModel.findByIdAndUpdate(
       id,
@@ -80,9 +85,11 @@ export class TrainingService {
         runValidators: true
       }
     );
+
     if (!training) {
       throw new TrainingNotFoundException();
     }
+    
     return training;
   }
 

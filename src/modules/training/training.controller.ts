@@ -9,7 +9,6 @@ import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
 
 
-
 @Controller('training')
 export class TrainingController {
   constructor(private readonly trainingService: TrainingService) {}
@@ -26,17 +25,17 @@ export class TrainingController {
   }
 
   @Post()
-  async create(@Body() createTrainingDto: CreateTrainingDto): Promise<Training> {
-    return await this.trainingService.create(createTrainingDto);
+  create(@Body() createTrainingDto: CreateTrainingDto): Promise<Training> {
+    return this.trainingService.create(createTrainingDto);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto): Promise<Training> {
+  update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto): Promise<Training> {
     return this.trainingService.update(id, updateTrainingDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Training> {
+  remove(@Param('id') id: string): Promise<Training> {
     return this.trainingService.remove(id);
   }
 }

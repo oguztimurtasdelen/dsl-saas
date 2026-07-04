@@ -4,6 +4,8 @@ import { TrainingHandler } from "../../training.contracts";
 import { ShortPassTrainingDto } from "./dto/shortpass.program.dto";
 import { ShortPassTrainingResultDto } from "./dto/shortpass.result.dto";
 import { BadRequestException } from "@nestjs/common";
+import { TrainingProgramInvalidException } from "../../exceptions/training-program-invalid.exception";
+import { TrainingResultInvalidException } from "../../exceptions/training-result-invalid.exception";
 
 
 export class ShortPassTrainingHandler implements TrainingHandler {
@@ -13,28 +15,30 @@ export class ShortPassTrainingHandler implements TrainingHandler {
     }
 
     validateTrainingProgram(trainingProgram: ShortPassTrainingDto[]): void {
-        const program = trainingProgram.map(item => plainToInstance(ShortPassTrainingDto, item));
-        const errors = program.flatMap(item => validateSync(item, { 
+        const _trainingProgram = trainingProgram.map(item => plainToInstance(ShortPassTrainingDto, item));
+        const errors = _trainingProgram.flatMap(item => validateSync(item, { 
             whitelist: true, 
             forbidNonWhitelisted: true,
             skipMissingProperties: false
         }));
 
         if (errors.length > 0) {
-            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ShortPassTrainingDto', errors});
+            throw new TrainingProgramInvalidException();
         }
     }
 
     validateTrainingResult(trainingResult: ShortPassTrainingResultDto[]): void {
-        const program = trainingResult.map(item => plainToInstance(ShortPassTrainingResultDto, item));
-        const errors = program.flatMap(item => validateSync(item, { 
+        if (!trainingResult) return;
+        
+        const _trainingResult = trainingResult.map(item => plainToInstance(ShortPassTrainingResultDto, item));
+        const errors = _trainingResult.flatMap(item => validateSync(item, { 
             whitelist: true, 
             forbidNonWhitelisted: true,
             skipMissingProperties: false
         }));
 
         if (errors.length > 0) {
-            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ShortPassTrainingResultDto', errors});
+            throw new TrainingResultInvalidException();
         }
     }
 

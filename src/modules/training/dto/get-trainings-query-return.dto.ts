@@ -4,9 +4,7 @@ import { Training } from "../training.schema";
 
 
 export class GetTrainingsQueryReturnDto {
-
   trainings: Training[];
-
   pagination: {
     page: number;
     limit: number;

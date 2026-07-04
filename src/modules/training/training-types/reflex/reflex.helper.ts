@@ -4,6 +4,8 @@ import { TrainingHandler } from "../../training.contracts";
 import { ReflexTrainingDto } from "./dto/reflex.program.dto";
 import { ReflexTrainingResultDto } from "./dto/reflex.result.dto";
 import { BadRequestException } from "@nestjs/common";
+import { TrainingProgramInvalidException } from "../../exceptions/training-program-invalid.exception";
+import { TrainingResultInvalidException } from "../../exceptions/training-result-invalid.exception";
 
 export class ReflexTrainingHandler implements TrainingHandler {
 
@@ -12,28 +14,30 @@ export class ReflexTrainingHandler implements TrainingHandler {
     }
 
     validateTrainingProgram(trainingProgram: ReflexTrainingDto[]): void {
-        const program = trainingProgram.map(item => plainToInstance(ReflexTrainingDto, item));
-        const errors = program.flatMap(item => validateSync(item, { 
+        const _trainingProgram = trainingProgram.map(item => plainToInstance(ReflexTrainingDto, item));
+        const errors = _trainingProgram.flatMap(item => validateSync(item, { 
             whitelist: true, 
             forbidNonWhitelisted: true,
             skipMissingProperties: false
         }));
 
         if (errors.length > 0) {
-            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ReflexTrainingDto', errors});
+            throw new TrainingProgramInvalidException();
         }
     }
 
     validateTrainingResult(trainingResult: ReflexTrainingResultDto[]): void {
-        const program = trainingResult.map(item => plainToInstance(ReflexTrainingResultDto, item));
-        const errors = program.flatMap(item => validateSync(item, { 
+        if (!trainingResult) return;
+        
+        const _trainingResult = trainingResult.map(item => plainToInstance(ReflexTrainingResultDto, item));
+        const errors = _trainingResult.flatMap(item => validateSync(item, { 
             whitelist: true, 
             forbidNonWhitelisted: true,
             skipMissingProperties: false
         }));
 
         if (errors.length > 0) {
-            throw new BadRequestException({code: 'VALIDATION_ERROR', message: 'Validation failed for ReflexReflexTrainingResultDtoTrainingDto', errors});
+            throw new TrainingResultInvalidException();
         }
     }
 
