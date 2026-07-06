@@ -23,4 +23,7 @@ export class GetTrainingsQueryDto {
     @IsOptional()
     @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
     trainingStatus?: string;
+
+    @IsOptional()
+    createdAt?: string;
 }

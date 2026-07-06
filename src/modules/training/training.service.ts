@@ -4,7 +4,7 @@ import { UpdateTrainingDto } from './dto/update-training.dto';
 import { TrainingType } from './training.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Training } from './training.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { TrainingMapper } from './training.mapper';
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
@@ -19,11 +19,14 @@ export class TrainingService {
     private readonly trainingModel: Model<Training> 
   ){}
 
-  async findAll(query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
+  async findAll(profile_id: string, query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
     const skip = (query.page - 1) * query.limit;
-    const filter: any = {
-      trainingType: query.trainingType, 
-      trainingStatus: query.trainingStatus
+
+    const filter: FilterQuery<Training> = {
+      profile: new Types.ObjectId(profile_id),
+      ...(query.trainingType && { trainingType: query.trainingType }),
+      ...(query.trainingStatus && { trainingStatus: query.trainingStatus }),
+      ...(query.createdAt && { createdAt: { $gte: new Date(`${query.createdAt}T00:00:00.000Z`), $lt: new Date(`${query.createdAt}T23:59:59.999Z`) } })
     };
     
     const [trainings, total]: [Training[], number] = await Promise.all([

@@ -15,8 +15,8 @@ export class TrainingController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll(@CurrentProfileID() user: any, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
-    return this.trainingService.findAll(query);
+  findAll(@CurrentProfileID() profile_id: string, @Query() query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
+    return this.trainingService.findAll(profile_id, query);
   }
 
   @Get(':id')
