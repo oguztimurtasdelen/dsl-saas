@@ -1,6 +1,7 @@
 import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { DeviceStatusEnum } from 'src/modules/device/enums/deviceStatus.enum';
+import { DeviceStatusEnum } from '../enums/deviceStatus.enum';
+import { TrainingTypeEnum } from '../../training/enums/trainingType.enum';
 
 export class GetDevicesQueryDto {
     @IsOptional()
@@ -16,6 +17,10 @@ export class GetDevicesQueryDto {
     limit?: number;
 
     @IsOptional()
+    @IsEnum(TrainingTypeEnum, {message: 'Training type is not valid'})
+    trainingType?: TrainingTypeEnum;
+
+    @IsOptional()
     deviceCode?: string;
 
     @IsOptional()
@@ -24,6 +29,4 @@ export class GetDevicesQueryDto {
     @IsOptional()
     @IsEnum(DeviceStatusEnum, {message: 'Device status is not valid'})
     deviceStatus?: string;
-
-    
 }

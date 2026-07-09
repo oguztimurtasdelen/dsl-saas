@@ -25,6 +25,7 @@ export class DeviceService {
 
     const filter: any = {};
     if (query) {
+      if (query.trainingType) filter.trainingType = query.trainingType;
       if (query.deviceCode) filter.deviceCode = query.deviceCode;
       if (query.deviceName) filter.deviceName = query.deviceName;
       if (query.deviceStatus) filter.deviceStatus = query.deviceStatus;
@@ -48,6 +49,7 @@ export class DeviceService {
         limit: limit,
         total: total,
         totalPages: Math.ceil(total / limit),
+        trainingType: query?.trainingType ?? null,
         deviceCode: query?.deviceCode ?? null,
         deviceName: query?.deviceName ?? null,
         deviceStatus: query?.deviceStatus ?? null,

@@ -6,9 +6,10 @@ export class DeviceMapper {
     static convertDeviceDtoToType(dto: CreateDeviceDto | UpdateDeviceDto): DeviceType {
         return <DeviceType>{
             macAddress: dto.macAddress,
+            trainingType: dto.trainingType,
             deviceCode: dto.deviceCode,
             deviceName: dto.deviceName,
-            status: dto.status,
+            deviceStatus: dto.deviceStatus,
             firmwareVersion: dto.firmwareVersion,
             description: dto.description
         };

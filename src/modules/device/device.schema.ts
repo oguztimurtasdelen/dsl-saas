@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { DeviceStatusEnum } from "src/modules/device/enums/deviceStatus.enum";
+import { DeviceStatusEnum } from "./enums/deviceStatus.enum";
+import { TrainingTypeEnum } from "../training/enums/trainingType.enum";
 
 @Schema({
     timestamps: true,
@@ -18,6 +19,13 @@ export class Device extends Document {
         match: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/ // Regex for MAC address format
     })
     macAddress: string;
+
+    @Prop({
+        required: true,
+        type: String,
+        enum: TrainingTypeEnum
+    })
+    trainingType: TrainingTypeEnum;
 
     @Prop({
         unique: true,

@@ -10,6 +10,7 @@ export class GetDevicesQueryReturnDto {
     limit: number;
     total: number;
     totalPages: number;
+    trainingType: string;
     deviceCode: string;
     deviceName: string;
     deviceStatus: string;
