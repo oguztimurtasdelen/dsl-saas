@@ -1,4 +1,5 @@
-import { IsDefined, IsEnum, IsNotEmpty, IsOptional, ValidateIf } from "class-validator";
+import { IsDefined, IsEnum, IsNotEmpty, IsOptional, ValidateIf, IsInt, Min, Max } from "class-validator";
+import { Type } from 'class-transformer';
 import { Types } from "mongoose";
 import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
 import { TrainingStatusEnum } from "src/modules/training/enums/trainingStatus.enum";
@@ -7,7 +8,8 @@ export class CreateTrainingDto {
     @IsNotEmpty({message: "profileId cannot be empty"})
     profile: Types.ObjectId;
 
-    @IsNotEmpty({message: "deviceId cannot be empty"})
+    @ValidateIf((dto) => dto.trainingStatus in [TrainingStatusEnum.READY, TrainingStatusEnum.STARTED]) // Only validate device if training status in [READY, STARTED]
+    @IsNotEmpty({ message: 'device cannot be empty when trainingStatus is READY' })
     device: Types.ObjectId;
 
     @IsNotEmpty({message: "trainingType cannot be empty!"})
@@ -18,11 +20,20 @@ export class CreateTrainingDto {
     @IsEnum(TrainingStatusEnum, {message: 'trainingStatus is not valid'})
     trainingStatus: TrainingStatusEnum;
 
-    @IsNotEmpty({message: "trainingProgram cannot be empty!"})
+    @ValidateIf((dto) => dto.trainingProgram === null) // Only validate trainingLevel if trainingProgram is null
+    @IsDefined()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    @Max(99)
+    trainingLevel: number;
+
+    @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.READY) // Only validate training program if trainingStatus is READY
+    @IsNotEmpty({message: "trainingProgram cannot be empty when trainingStatus is READY!"})
     trainingProgram: any;
 
-    @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.COMPLETED) // Only validate trainingResult if trainingStatus is COMPLETED
-    @IsDefined()
+    @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.COMPLETED) // Only validate training result if trainingStatus is COMPLETED
+    @IsNotEmpty({message: "trainingResult cannot be empty when trainingStatus is COMPLETED!"})
     trainingResult: any;
 
 }

@@ -15,6 +15,7 @@ export class Training extends Document {
     _id: Types.ObjectId;
 
     @Prop({
+        required: true,
         type: Types.ObjectId,
         unique: false, 
         ref: Profile.name
@@ -22,9 +23,11 @@ export class Training extends Document {
     profile: Types.ObjectId;
     
     @Prop({
+        required: false,
         type: Types.ObjectId,
         unique: false, 
-        ref: Device.name
+        ref: Device.name,
+        default: null
     })
     device: Types.ObjectId;
     
@@ -44,6 +47,14 @@ export class Training extends Document {
         default: TrainingStatusEnum.NEW
     })
     trainingStatus: TrainingStatusEnum
+
+    @Prop({
+        unique: false, 
+        required: false, 
+        type: Number, 
+        default: null
+    })
+    trainingLevel: number;
     
     @Prop({
         unique: false, 

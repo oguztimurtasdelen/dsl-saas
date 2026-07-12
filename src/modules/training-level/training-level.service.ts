@@ -17,7 +17,7 @@ export class TrainingLevelService {
     ){}
 
     async findAll(query: GetTrainingLevelsQueryDto): Promise<TrainingLevel[]> {
-        const trainingLevels: TrainingLevel[] = await this.trainingLevelModel.find({trainingType: query.trainingType}).select("-trainingProgram").exec();
+        const trainingLevels: TrainingLevel[] = await this.trainingLevelModel.find({trainingType: query.trainingType}).select("trainingType trainingLevel -_id").sort({trainingLevel: 1}).exec();
         return trainingLevels;
     }
 
@@ -27,6 +27,10 @@ export class TrainingLevelService {
             throw new TrainingLevelNotFoundException();
         }
         return trainingLevel;
+    }
+
+    async findByTrainingTypeAndLevel(trainingType: string, trainingLevel: number): Promise<TrainingLevel | null> {
+        return this.trainingLevelModel.findOne({ trainingType, trainingLevel }).exec();
     }
 
     async create(createTrainingLevelDto: CreateTrainingLevelDto): Promise<TrainingLevel> {

@@ -8,6 +8,7 @@ export type TrainingType = {
     device: Types.ObjectId;
     trainingType: TrainingTypeEnum
     trainingStatus: TrainingStatusEnum;
+    trainingLevel: number;
     trainingProgram: any;
     trainingResult: any;
     trainingMetrics: any;

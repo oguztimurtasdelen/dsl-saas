@@ -10,13 +10,15 @@ import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
 import { TrainingNotFoundException } from './exceptions/training-not-found.exception';
 import { TrainingFactory } from './factory/training.factory';
+import { TrainingLevelService } from '../training-level/training-level.service';
 
 @Injectable()
 export class TrainingService {
 
   constructor(
     @InjectModel(Training.name)
-    private readonly trainingModel: Model<Training> 
+    private readonly trainingModel: Model<Training>,
+    private readonly trainingLevelService: TrainingLevelService
   ){}
 
   async findAll(profile_id: string, query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
@@ -26,6 +28,7 @@ export class TrainingService {
       profile: new Types.ObjectId(profile_id),
       ...(query.trainingType && { trainingType: query.trainingType }),
       ...(query.trainingStatus && { trainingStatus: query.trainingStatus }),
+      ...(query.trainingLevel && { trainingLevel: query.trainingLevel }),
       ...(query.createdAt && { createdAt: { $gte: new Date(`${query.createdAt}T00:00:00.000Z`), $lt: new Date(`${query.createdAt}T23:59:59.999Z`) } })
     };
     
@@ -48,7 +51,8 @@ export class TrainingService {
         total: total,
         totalPages: Math.ceil(total / query.limit),
         trainingType: query.trainingType,
-        trainingStatus: query.trainingStatus
+        trainingStatus: query.trainingStatus,
+        trainingLevel: query.trainingLevel
       }
     };
   }
@@ -62,6 +66,12 @@ export class TrainingService {
   }
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
+    // Check if the training program is provided. If not, resolve it from the training type and training level via training-level service.
+    if (createTrainingDto.trainingProgram === null || createTrainingDto.trainingProgram === undefined) {
+      const trainingLevel = await this.trainingLevelService.findByTrainingTypeAndLevel(createTrainingDto.trainingType, createTrainingDto.trainingLevel);
+      createTrainingDto.trainingProgram = trainingLevel?.trainingProgram;
+    }
+
     // Get the appropriate handler based on the training type.
     const handler = TrainingFactory.get(createTrainingDto.trainingType);
     // Validate the training program using the handler only if it exists.

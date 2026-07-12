@@ -12,6 +12,7 @@ export class TrainingMapper {
             device: dto.device ? new Types.ObjectId(dto.device) : dto.device,
             trainingType: TrainingTypeEnum[dto.trainingType],
             trainingStatus: TrainingStatusEnum[dto.trainingStatus],
+            trainingLevel: dto.trainingLevel,
             trainingProgram: dto.trainingProgram,
             trainingResult: dto.trainingResult,
             trainingMetrics: (dto as UpdateTrainingDto).trainingMetrics

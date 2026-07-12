@@ -12,6 +12,7 @@ export class GetTrainingsQueryReturnDto {
     totalPages: number;
     trainingType: string;
     trainingStatus: string;
+    trainingLevel: number;
   };
 
 }

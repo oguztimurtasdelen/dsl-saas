@@ -7,6 +7,7 @@ import { TrainingLevel, TrainingLevelSchema } from "./training-level.schema";
 @Module({
     imports: [MongooseModule.forFeature([{name: TrainingLevel.name, schema: TrainingLevelSchema}])],
     controllers: [TrainingLevelController],
-    providers: [TrainingLevelService]
+    providers: [TrainingLevelService],
+    exports: [TrainingLevelService]
 })
 export class TrainingLevelModule {}
