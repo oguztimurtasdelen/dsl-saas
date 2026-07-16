@@ -33,8 +33,7 @@ export class UpdateTrainingDto extends PartialType(CreateTrainingDto) {
     @Max(99)
     trainingLevel: number;
 
-    @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.READY) // Only validate training program if trainingStatus is READY
-    @IsNotEmpty({message: "trainingProgram cannot be empty when trainingStatus is READY!"})
+    @IsDefined()
     trainingProgram: any;
 
     @ValidateIf((dto) => dto.trainingStatus === TrainingStatusEnum.COMPLETED) // Only validate training result if trainingStatus is COMPLETED
