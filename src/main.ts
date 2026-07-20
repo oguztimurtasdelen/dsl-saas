@@ -7,11 +7,21 @@ import configuration from './config/configuration';
 import * as cookieParser from 'cookie-parser';
 import { GlobalExceptionFilter } from './customs/filters/global-exception.filter';
 import { ErrorLogService } from './modules/error-log/error-log.service';
-
+import * as dns from 'node:dns';
 
 const chalk = require('chalk');
 
 async function bootstrap() {
+
+  // Get custom DNS servers from environment variable and set them
+  const dnsServers = process.env.CUSTOM_DNS_SERVERS?.split('###').map(x => x.trim());
+
+  // If it is not empty, set the custom DNS servers due to somehow the default DNS servers is trying to resolve via 127.0.0.1 which is localhost.
+  if (dnsServers?.length) {
+    dns.setServers(dnsServers);
+  }
+  console.log('Executed DNS Server:', dns.getServers());
+  
   const app = await NestFactory.create(AppModule);
   // Global Validation Pipe
   app.useGlobalPipes(new ValidationPipe({
