@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "node_modules/@nestjs/mongoose/dist";
-import { Document, Types } from "mongoose";
+import { Document, Types, Schema as mongooseSchema } from "mongoose";
 import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
-import { ReflexTrainingDto } from "../training/training-types/reflex/dto/reflex.program.dto";
 
 
 @Schema({
@@ -29,9 +28,21 @@ export class TrainingLevel extends Document {
 
     @Prop({
         unique: false,
-        required: true
+        required: true,
+        type: mongooseSchema.Types.Mixed
     })
-    trainingProgram: ReflexTrainingDto[]
+    trainingProgram: unknown;
 }
 
 export const TrainingLevelSchema = SchemaFactory.createForClass(TrainingLevel);
+
+TrainingLevelSchema.index(
+    {
+        trainingType: 1,
+        trainingLevel: 1,
+    },
+    {
+        unique: true,
+        name: 'uk_trainingtype_traininglevel'
+    }
+);
