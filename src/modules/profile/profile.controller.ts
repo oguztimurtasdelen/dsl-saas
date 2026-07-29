@@ -19,15 +19,15 @@ export class ProfileController {
   @Get()
   @UseGuards(JwtAuthGuard)
   // Guard for second control will be here by using CurrentProfileID
-  async findAll(@Query() query: GetProfilesQueryDto, @Param('profileId') profileId: string): Promise<GetProfilesQueryReturnDto> {
-    return this.userprofileService.findAll(query, profileId);
+  async findAll(@Query() query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto> {
+    return this.userprofileService.findAll(query);
   }
   
   // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Get(':profileId')
   @UseGuards(JwtAuthGuard)
-  async findOne(@Param('profileId') profileId: string): Promise<Profile> {
-    return await this.userprofileService.findOne(profileId);
+  async findOne(@Param('profileId') id: string): Promise<Profile> {
+    return await this.userprofileService.findOne(id);
   }
 
   // This function will be called before exactly sign in, we need to define another JWT token and change the guard mechanism. - USER ID second control guard.
@@ -40,14 +40,14 @@ export class ProfileController {
   // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Put(':profileId')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('profileId') profileId: string, @Body() updateProfileDto: UpdateProfileDto): Promise<Profile> {
-    return await this.userprofileService.update(profileId, updateProfileDto);
+  async update(@Param('profileId') id: string, @Body() updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    return await this.userprofileService.update(id, updateProfileDto);
   }
 
   // Guard for second control will be here by using CurrentProfileID + JWT GUARD
   @Delete(':profileId')
   @UseGuards(JwtAuthGuard)
-  async remove(@Param('profileId') profileId: string): Promise<Profile> {
-    return await this.userprofileService.remove(profileId);
+  async remove(@Param('profileId') id: string): Promise<Profile> {
+    return await this.userprofileService.remove(id);
   }
 }

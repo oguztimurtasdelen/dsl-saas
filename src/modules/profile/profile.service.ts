@@ -3,7 +3,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileType } from './profile.type';
 import { Profile } from './profile.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { ProfileMapper } from './profile.mapper';
 import { GetProfilesQueryDto } from './dto/get-profiles-query.dto';
@@ -11,69 +11,54 @@ import { GetProfilesQueryReturnDto } from './dto/get-profiles-query-return.dto';
 import { MongoServerError } from 'mongodb';
 import { ProfileNotFoundException } from './exceptions/profile-not-found.exception';
 import { ProfileNicknameTakenException } from './exceptions/profile-nickname-taken.exception';
+import { ProfileRepository } from './profile.repository';
 
 
 @Injectable()
 export class ProfileService {
-
   constructor(
-    @InjectModel(Profile.name)
-    private readonly profileModel: Model<Profile>
+    private readonly profileRepository: ProfileRepository,
   ) {}
 
-  async findAll(query: GetProfilesQueryDto, profileId: string): Promise<GetProfilesQueryReturnDto> {
-    const _profile: Profile = await this.findOne(profileId);
-    const skip = (query.page - 1) * query.limit;
-    const [profiles, total]: [Profile[], number] = await Promise.all([
-      this.profileModel
-        .find({ user: _profile.user })
-        .sort({ createdAt: -1 }) // Sort by creation date (newest first)
-        .skip(skip)
-        .limit(query.limit)
-        .exec(),
+  async findAll(query: GetProfilesQueryDto): Promise<GetProfilesQueryReturnDto> {
+    const filter: FilterQuery<Profile> = ProfileMapper.getProfileFilterQuery(query);
+    const [profileList, totalProfileCount]: [Profile[], number] = await this.profileRepository.findAll(query, filter);
 
-      this.profileModel.countDocuments().exec()
-    ]);
-
-    return<GetProfilesQueryReturnDto>{
-      profiles: profiles,
-      pagination: {
-        page: query.page,
-        limit: query.limit,
-        total: total,
-        totalPages: Math.ceil(total / query.limit)
-      }
+    return <GetProfilesQueryReturnDto>{
+      profiles: profileList,
+      pagination: query,
+      total: totalProfileCount,
+      totalPages: Math.ceil(totalProfileCount / query.limit),
     };
   }
 
 
-  async findOne(profileId: string): Promise<Profile> {
-    const profile: Profile = await this.profileModel.findById(profileId).exec();
+  async findOne(id: string): Promise<Profile> {
+    const _profile: Profile = await this.profileRepository.findOne(id);
 
-    if (!profile) {
+    if (!_profile) {
       throw new ProfileNotFoundException();
     }
 
-    return profile;
+    return _profile;
   }
 
   
-  async findOneByUserId(userId: Types.ObjectId): Promise<Profile> {
-    const profile: Profile = await this.profileModel.findOne({ user: userId }).exec();
+  async findOneByUserId(userId: Types.ObjectId | string): Promise<Profile> {
+    const _profile: Profile = await this.profileRepository.findOneByUserId(userId);
 
-    if (!profile) {
+    if (!_profile) {
       throw new ProfileNotFoundException();
     }
 
-    return profile;
+    return _profile;
 
   }
 
-  async createProfile(profileDto: CreateProfileDto): Promise<Profile> {
+  async createProfile(createProfileDto: CreateProfileDto): Promise<Profile> {
     try {
-      // Convert dto to type
-      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileDto);
-      const _profile: Profile = await this.profileModel.create(profileType);
+      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(createProfileDto);
+      const _profile: Profile = await this.profileRepository.create(profileType);
       return _profile;
     } catch (error) {
       if (error instanceof MongoServerError && error.code === 11000) {
@@ -85,23 +70,16 @@ export class ProfileService {
   }
 
 
-  async update(profileId: string, profileUpdateDto: UpdateProfileDto): Promise<Profile> {
+  async update(id: string, updateProfileUpdateDto: UpdateProfileDto): Promise<Profile> {
     try {
-      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(profileUpdateDto);
-      const profile: Profile = await this.profileModel.findByIdAndUpdate(
-        profileId,
-        profileType,
-        {
-          new: true,
-          runValidators: true
-        }
-      );
+      const profileType: ProfileType = ProfileMapper.convertProfileDtoToType(updateProfileUpdateDto);
+      const _profile: Profile = await this.profileRepository.update(id, profileType);
 
-      if (!profile) {
+      if (!_profile) {
         throw new ProfileNotFoundException();
       }
 
-      return profile;
+      return _profile;
     } catch (error) {
       if (error instanceof MongoServerError && error.code === 11000) {
         throw new ProfileNicknameTakenException();
@@ -111,23 +89,23 @@ export class ProfileService {
     }
   }
 
-  async remove(profileId: string): Promise<Profile> {
-    const profile: Profile = await this.profileModel.findByIdAndDelete(profileId);
+  async remove(id: string): Promise<Profile> {
+    const _profile: Profile = await this.profileRepository.remove(id);
 
-    if (!profile) {
+    if (!_profile) {
       throw new ProfileNotFoundException();
     }
 
-    return profile;
+    return _profile;
   }
 
   async removeByUserId(userId: string): Promise<Profile> {
-    const profile: Profile = await this.profileModel.findOneAndDelete({ user: new Types.ObjectId(userId) });
+    const _profile: Profile = await this.profileRepository.removeByUserId(userId);
     
-    if (!profile) {
+    if (!_profile) {
       throw new ProfileNotFoundException();
     }
 
-    return profile;
+    return _profile;
   }
 }

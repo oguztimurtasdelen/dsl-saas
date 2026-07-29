@@ -1,16 +1,11 @@
-// dto/paginated-users-response.dto.ts
-
 import { User } from "../user.schema";
+import { GetUsersQueryDto } from "./get-users-query.dto";
 
 export class GetUsersQueryReturnDto {
 
   users: User[];
-
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  pagination: GetUsersQueryDto;
+  total: number;
+  totalPages: number;
 
 }

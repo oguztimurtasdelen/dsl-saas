@@ -1,7 +1,6 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DeviceType } from './device.type';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { Device } from './device.schema';
 import { DeviceMapper } from './device.mapper';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -9,56 +8,29 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 import { GetDevicesQueryDto } from './dto/get-devices-query.dto';
 import { GetDevicesQueryReturnDto } from './dto/get-devices-query-return.dto';
 import { DeviceNotFoundException } from './exceptions/device-not-found.exception';
+import { DeviceRepository } from './device.repository';
 
 @Injectable()
 export class DeviceService {
 
   constructor(
-    @InjectModel(Device.name)
-    private readonly deviceModel: Model<Device>
+    private readonly deviceRepository: DeviceRepository,
   ) {}
 
   async findAll(query: GetDevicesQueryDto): Promise<GetDevicesQueryReturnDto> {
-    const page = query && query.page && query.page > 0 ? query.page : 1;
-    const limit = query && query.limit && query.limit > 0 ? query.limit : 10;
-    const skip = (page - 1) * limit;
-
-    const filter: any = {};
-    if (query) {
-      if (query.trainingType) filter.trainingType = query.trainingType;
-      if (query.deviceCode) filter.deviceCode = query.deviceCode;
-      if (query.deviceName) filter.deviceName = query.deviceName;
-      if (query.deviceStatus) filter.deviceStatus = query.deviceStatus;
-    }
-
-    const [devices, total]: [Device[], number] = await Promise.all([
-      this.deviceModel
-        .find(filter)
-        .sort({ createdAt: -1 }) // Sort by creation date (newest first)
-        .skip(skip)
-        .limit(limit)
-        .exec(),
-
-      this.deviceModel.countDocuments(filter).exec(),
-    ]);
+    const filter: FilterQuery<Device> = DeviceMapper.getDeviceFilterQuery(query);
+    const [deviceList, totalDeviceCount]: [Device[], number] = await this.deviceRepository.findAll(query, filter);
 
     return <GetDevicesQueryReturnDto>{
-      devices: devices,
-      pagination: {
-        page: page,
-        limit: limit,
-        total: total,
-        totalPages: Math.ceil(total / limit),
-        trainingType: query?.trainingType ?? null,
-        deviceCode: query?.deviceCode ?? null,
-        deviceName: query?.deviceName ?? null,
-        deviceStatus: query?.deviceStatus ?? null,
-      },
+      devices: deviceList,
+      pagination: query,
+      total: totalDeviceCount,
+      totalPages: Math.ceil(totalDeviceCount / query.limit),
     };
   }
 
-  async findOne(_id: string): Promise<Device> {
-    const device: Device = await this.deviceModel.findById(_id);
+  async findOne(id: string): Promise<Device> {
+    const device: Device = await this.deviceRepository.findOne(id);
     if (!device) {
       throw new DeviceNotFoundException();
     }
@@ -67,19 +39,13 @@ export class DeviceService {
 
   async create(createDeviceDto: CreateDeviceDto): Promise<Device> {
     const deviceType: DeviceType = DeviceMapper.convertDeviceDtoToType(createDeviceDto);
-    return await this.deviceModel.create(deviceType);
+
+    return await this.deviceRepository.create(deviceType);
   }
 
   async update(id: string, updateDeviceDto: UpdateDeviceDto): Promise<Device> {
     const deviceType: DeviceType = DeviceMapper.convertDeviceDtoToType(updateDeviceDto);
-    const _device: Device = await this.deviceModel.findByIdAndUpdate(
-      id, 
-      deviceType,
-      {
-        new: true, // Returns updated data
-        runValidators: true,
-      }
-    );
+    const _device: Device = await this.deviceRepository.update(id, deviceType);
 
     if (!_device) {
       throw new DeviceNotFoundException();
@@ -88,7 +54,7 @@ export class DeviceService {
   }
 
   async remove(id: string): Promise<Device> {
-    const _device: Device = await this.deviceModel.findByIdAndDelete(id);
+    const _device: Device = await this.deviceRepository.remove(id);
 
     if (!_device) {
       throw new DeviceNotFoundException();

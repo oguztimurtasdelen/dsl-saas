@@ -1,18 +1,12 @@
 // dto/paginated-users-response.dto.ts
 import { Training } from "../training.schema";
+import { GetTrainingsQueryDto } from "./get-trainings-query.dto";
 
 
 export class GetTrainingsQueryReturnDto {
   trainings: Training[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-    trainingType: string;
-    trainingStatus: string;
-    trainingLevel: number;
-    createdAt: string;
-  };
+  pagination: GetTrainingsQueryDto;
+  total: number;
+  totalPages: number;
 
 }

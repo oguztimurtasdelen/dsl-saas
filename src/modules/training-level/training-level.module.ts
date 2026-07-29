@@ -3,11 +3,24 @@ import { TrainingLevelController } from "./training-level.controller";
 import { TrainingLevelService } from "./training-level.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { TrainingLevel, TrainingLevelSchema } from "./training-level.schema";
+import { TrainingLevelRepository } from './training-level.repository';
+
 
 @Module({
-    imports: [MongooseModule.forFeature([{name: TrainingLevel.name, schema: TrainingLevelSchema}])],
-    controllers: [TrainingLevelController],
-    providers: [TrainingLevelService],
-    exports: [TrainingLevelService]
+    imports: [
+        MongooseModule.forFeature([
+            {name: TrainingLevel.name, schema: TrainingLevelSchema},
+        ]),
+    ],
+    controllers: [
+        TrainingLevelController
+    ],
+    providers: [
+        TrainingLevelService,
+        TrainingLevelRepository,
+    ],
+    exports: [
+        TrainingLevelService
+    ]
 })
 export class TrainingLevelModule {}

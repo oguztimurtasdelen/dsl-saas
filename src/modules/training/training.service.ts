@@ -2,67 +2,45 @@ import { Injectable } from '@nestjs/common';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { UpdateTrainingDto } from './dto/update-training.dto';
 import { TrainingType } from './training.type';
-import { InjectModel } from '@nestjs/mongoose';
 import { Training } from './training.schema';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { TrainingMapper } from './training.mapper';
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
 import { TrainingNotFoundException } from './exceptions/training-not-found.exception';
 import { TrainingFactory } from './factory/training.factory';
 import { TrainingLevelService } from '../training-level/training-level.service';
+import { TrainingRepository } from './training.repository';
+
 
 @Injectable()
 export class TrainingService {
 
   constructor(
-    @InjectModel(Training.name)
-    private readonly trainingModel: Model<Training>,
-    private readonly trainingLevelService: TrainingLevelService
+    private readonly trainingRepository: TrainingRepository,
+    private readonly trainingLevelService: TrainingLevelService,
   ){}
 
-  async findAll(profile_id: string, query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
-    const skip = (query.page - 1) * query.limit;
-
-    const filter: FilterQuery<Training> = {
-      profile: new Types.ObjectId(profile_id),
-      ...(query.trainingType && { trainingType: query.trainingType }),
-      ...(query.trainingStatus && { trainingStatus: query.trainingStatus }),
-      ...(query.trainingLevel && { trainingLevel: query.trainingLevel }),
-      ...(query.createdAt && { createdAt: { $gte: new Date(`${query.createdAt}T00:00:00.000Z`), $lt: new Date(`${query.createdAt}T23:59:59.999Z`) } })
-    };
+  async findAll(query: GetTrainingsQueryDto): Promise<GetTrainingsQueryReturnDto> {
+    const filter: FilterQuery<Training> = TrainingMapper.getTrainingFilterQuery(query);
+    const [trainingList, totalTrainingCount]: [Training[], number] = await this.trainingRepository.findAll(query, filter);
     
-    const [trainings, total]: [Training[], number] = await Promise.all([
-      this.trainingModel
-        .find(filter)
-        .sort({ createdAt: -1 }) // Sort by creation date (newest first)
-        .skip(skip)
-        .limit(query.limit)
-        .exec(),
-
-        this.trainingModel.countDocuments(filter).exec()
-    ]);
-
-    return<GetTrainingsQueryReturnDto>{
-      trainings: trainings,
-      pagination: {
-        page: query.page,
-        limit: query.limit,
-        total: total,
-        totalPages: Math.ceil(total / query.limit),
-        trainingType: query.trainingType,
-        trainingStatus: query.trainingStatus,
-        trainingLevel: query.trainingLevel
-      }
+    return <GetTrainingsQueryReturnDto>{
+      trainings: trainingList,
+      pagination: query,
+      total: totalTrainingCount,
+      totalPages: Math.ceil(totalTrainingCount / query.limit),
     };
   }
 
   async findOne(id: string): Promise<Training> {
-    const training: Training = await this.trainingModel.findById(id).exec();
-    if (!training) {
+    const _training: Training = await this.trainingRepository.findOne(id);
+
+    if (!_training) {
       throw new TrainingNotFoundException();
     }
-    return training;
+
+    return _training;
   }
 
   async create(createTrainingDto: CreateTrainingDto): Promise<Training> {
@@ -78,9 +56,9 @@ export class TrainingService {
     handler.validateTrainingProgram(createTrainingDto.trainingProgram);
     // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(createTrainingDto);
-    const training: Training = await this.trainingModel.create(trainingType);
+    const _training: Training = await this.trainingRepository.create(trainingType);
 
-    return training;
+    return _training;
   }
 
   async update(id: string, updateTrainingDto: UpdateTrainingDto): Promise<Training> {
@@ -94,28 +72,21 @@ export class TrainingService {
     
     // Convert the DTO to the TrainingType.
     const trainingType: TrainingType = TrainingMapper.convertTrainingDtoToType(updateTrainingDto);
+    const _training: Training = await this.trainingRepository.update(id, trainingType);
 
-    const training: Training = await this.trainingModel.findByIdAndUpdate(
-      id,
-      trainingType,
-      {
-        new: true,
-        runValidators: true
-      }
-    );
-
-    if (!training) {
+    if (!_training) {
       throw new TrainingNotFoundException();
     }
 
-    return training;
+    return _training;
   }
 
   async remove(id: string): Promise<Training> {
-    const training: Training = await this.trainingModel.findByIdAndDelete(id);
-    if (!training) {
+    const _training: Training = await this.trainingRepository.remove(id);
+
+    if (!_training) {
       throw new TrainingNotFoundException();
     }
-    return training;
+    return _training;
   }
 }

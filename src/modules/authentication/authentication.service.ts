@@ -99,12 +99,11 @@ export class AuthenticationService {
   }
 
   async signUpUser(signUpDto: SignUpDto): Promise<User> {
-    // Convert dto to type
-    const userType: UserType = UserMapper.convertUserDtoToType(signUpDto);
+    
 
     // Check if user already exists
     //const existingUser = await this.userModel.findOne({ email: userType.email }).exec();
-    const existingUser = await this.userService.findOneByEmail(userType.email);
+    const existingUser: User = await this.userService.findOneByEmail(signUpDto.email);
     if (existingUser) {
       throw new HttpException(
         { success: false, message: 'E-mail already exists!' },
@@ -113,9 +112,9 @@ export class AuthenticationService {
     }
     
     // If user does not exist, create a new user
-    userType.password = await this.hashPass(userType.password); // Hash the password before saving
-    //const _user = await this.userModel.create(userType);
-    const _user = await this.userService.create(userType);
+    signUpDto.password = await this.hashPass(signUpDto.password); // Hash the password before saving
+    
+    const _user: User = await this.userService.create(signUpDto);
     
     return _user;
   }

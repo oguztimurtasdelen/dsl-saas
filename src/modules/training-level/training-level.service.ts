@@ -1,67 +1,71 @@
 import { Injectable } from "node_modules/@nestjs/common";
-import { InjectModel } from "node_modules/@nestjs/mongoose/dist";
 import { TrainingLevel } from "./training-level.schema";
-import { Model } from "mongoose";
 import { TrainingLevelNotFoundException } from "./exceptions/training-level-not-found.exception";
 import { CreateTrainingLevelDto } from "./dto/create-training-level.dto";
 import { TrainingLevelType } from "./training-level.type";
 import { TrainingLevelMapper } from "./training-level.mapper";
 import { UpdateTrainingLevelDto } from "./dto/update-training-level.dto";
 import { GetTrainingLevelsQueryDto } from "./dto/get-training-levels-query.dto";
+import { TrainingLevelRepository } from "./training-level.repository";
+import { GetTrainingLevelsQueryReturnDto } from "./dto/get-training-levels-query-return.dto";
+import { FilterQuery } from "mongoose";
+
 
 @Injectable()
 export class TrainingLevelService {
     constructor(
-        @InjectModel(TrainingLevel.name)
-        private readonly trainingLevelModel: Model<TrainingLevel>
+        private readonly trainingLevelRepository: TrainingLevelRepository,
     ){}
 
-    async findAll(query: GetTrainingLevelsQueryDto): Promise<TrainingLevel[]> {
-        const trainingLevels: TrainingLevel[] = await this.trainingLevelModel.find({trainingType: query.trainingType}).select("trainingType trainingLevel -_id").sort({trainingLevel: 1}).exec();
-        return trainingLevels;
+    async findAll(query: GetTrainingLevelsQueryDto): Promise<GetTrainingLevelsQueryReturnDto> {
+        const filter: FilterQuery<TrainingLevel> = TrainingLevelMapper.getTrainingLevelFilterQuery(query);
+        const [trainingLevelList, totalTrainingLevelCount]: [TrainingLevel[], number] = await this.trainingLevelRepository.findAll(query, filter);
+        
+        return <GetTrainingLevelsQueryReturnDto>{
+            trainingLevels: trainingLevelList,
+            pagination: query,
+            total: totalTrainingLevelCount,
+            totalPages: Math.ceil(totalTrainingLevelCount / query.limit),
+        }
     }
 
     async findOne(id: string): Promise<TrainingLevel> {
-        const trainingLevel: TrainingLevel | null = await this.trainingLevelModel.findById(id).exec();
-        if (!trainingLevel) {
+        const _trainingLevel: TrainingLevel = await this.trainingLevelRepository.findOne(id);
+
+        if (!_trainingLevel) {
             throw new TrainingLevelNotFoundException();
         }
-        return trainingLevel;
+
+        return _trainingLevel;
     }
 
-    async findByTrainingTypeAndLevel(trainingType: string, trainingLevel: number): Promise<TrainingLevel | null> {
-        return this.trainingLevelModel.findOne({ trainingType, trainingLevel }).exec();
+    async findByTrainingTypeAndLevel(trainingType: string, trainingLevel: number): Promise<TrainingLevel> {
+        const _trainingLevel: TrainingLevel = await this.trainingLevelRepository.findByTrainingTypeAndLevel(trainingType, trainingLevel);
+        
+        return _trainingLevel;
     }
 
     async create(createTrainingLevelDto: CreateTrainingLevelDto): Promise<TrainingLevel> {
         const trainingLevelType: TrainingLevelType = TrainingLevelMapper.convertTrainingLevelDtoToType(createTrainingLevelDto);
-        const trainingLevel: TrainingLevel = await this.trainingLevelModel.create(trainingLevelType);
+        const _trainingLevel: TrainingLevel = await this.trainingLevelRepository.create(trainingLevelType);
 
-        return trainingLevel;
+        return _trainingLevel;
     }
 
     async update(id: string, updateTrainingLevelDto: UpdateTrainingLevelDto): Promise<TrainingLevel> {
         const trainingLevelType: TrainingLevelType = TrainingLevelMapper.convertTrainingLevelDtoToType(updateTrainingLevelDto);
-        const trainingLevel: TrainingLevel = await this.trainingLevelModel.findByIdAndUpdate(
-            id,
-            trainingLevelType,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
+        const _trainingLevel: TrainingLevel = await this.trainingLevelRepository.update(id, trainingLevelType);
 
-        if (!trainingLevel) {
+        if (!_trainingLevel) {
             throw new TrainingLevelNotFoundException();
         }
-        return trainingLevel;
+
+        return _trainingLevel;
     }
 
     async remove(id: string): Promise<TrainingLevel> {
-        const trainingLevel: TrainingLevel = await this.trainingLevelModel.findByIdAndDelete(id);
-        if (!trainingLevel) {
-            throw new TrainingLevelNotFoundException();
-        }
-        return trainingLevel;
+        const _trainingLevel: TrainingLevel = await this.trainingLevelRepository.remove(id);
+
+        return _trainingLevel;
     }
 }

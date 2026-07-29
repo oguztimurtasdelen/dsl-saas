@@ -4,6 +4,7 @@ import { TrainingLevel } from "./training-level.schema";
 import { GetTrainingLevelsQueryDto } from "./dto/get-training-levels-query.dto";
 import { CreateTrainingLevelDto } from "./dto/create-training-level.dto";
 import { UpdateTrainingLevelDto } from "./dto/update-training-level.dto";
+import { GetTrainingLevelsQueryReturnDto } from "./dto/get-training-levels-query-return.dto";
 
 @Controller('training-level')
 export class TrainingLevelController {
@@ -12,7 +13,7 @@ export class TrainingLevelController {
     ) {}
 
     @Get()
-    findAll(@Query() query: GetTrainingLevelsQueryDto): Promise<TrainingLevel[]> {
+    findAll(@Query() query: GetTrainingLevelsQueryDto): Promise<GetTrainingLevelsQueryReturnDto> {
         return this.traininglevelService.findAll(query);
     }
 
