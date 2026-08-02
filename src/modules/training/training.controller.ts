@@ -7,6 +7,8 @@ import { CurrentProfileID } from '../../customs/decorators/current-profileID.dec
 import { Training } from './training.schema';
 import { GetTrainingsQueryReturnDto } from './dto/get-trainings-query-return.dto';
 import { GetTrainingsQueryDto } from './dto/get-trainings-query.dto';
+import { GetAvailableTrainingLevelsQueryDto } from './dto/get-available-training-levels-query.dto';
+import { GetAvailableTrainingLevelsQueryReturnDto } from './dto/get-available-training-levels-query-return.dto';
 
 
 @Controller('training')
@@ -19,6 +21,11 @@ export class TrainingController {
     //Make sure profile has provided
     query.profile = profile_id;
     return this.trainingService.findAll(query);
+  }
+
+  @Get('available-traininglevels')
+  findAvailableTrainingLevelsByTrainingType(@Query() query: GetAvailableTrainingLevelsQueryDto): Promise<GetAvailableTrainingLevelsQueryReturnDto[]> {
+    return this.trainingService.findAvailableTrainingLevelsByTrainingType(query);
   }
 
   @Get(':id')

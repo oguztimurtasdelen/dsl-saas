@@ -1,5 +1,5 @@
 import { IsEnum, IsInt, IsNumber, IsOptional, Min } from "class-validator";
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { TrainingTypeEnum } from "src/modules/training/enums/trainingType.enum";
 
 export class GetTrainingLevelsQueryDto {

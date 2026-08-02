@@ -11,6 +11,12 @@ import { TrainingNotFoundException } from './exceptions/training-not-found.excep
 import { TrainingFactory } from './factory/training.factory';
 import { TrainingLevelService } from '../training-level/training-level.service';
 import { TrainingRepository } from './training.repository';
+import { GetAvailableTrainingLevelsQueryDto } from './dto/get-available-training-levels-query.dto';
+import { GetAvailableTrainingLevelsQueryReturnDto } from './dto/get-available-training-levels-query-return.dto';
+import { GetTrainingLevelsQueryDto } from '../training-level/dto/get-training-levels-query.dto';
+import { GetTrainingLevelsQueryReturnDto } from '../training-level/dto/get-training-levels-query-return.dto';
+import { TrainingStatusEnum } from './enums/trainingStatus.enum';
+import { getAvailableTrainingLevelsByTrainingType } from './training.helper';
 
 
 @Injectable()
@@ -31,6 +37,38 @@ export class TrainingService {
       total: totalTrainingCount,
       totalPages: Math.ceil(totalTrainingCount / query.limit),
     };
+  }
+
+  async findAvailableTrainingLevelsByTrainingType(query: GetAvailableTrainingLevelsQueryDto): Promise<GetAvailableTrainingLevelsQueryReturnDto[]> {
+    // Build a query to fetch training levels based on the provided training type.
+    const trainingLevelQueryDto: GetTrainingLevelsQueryDto = <GetTrainingLevelsQueryDto>{
+      trainingType: query.trainingType,
+    };
+    // Fetch the all training levels using the training level service.
+    const _trainingLevels: GetTrainingLevelsQueryReturnDto = await this.trainingLevelService.findAll(trainingLevelQueryDto);
+    
+
+    // Build a query to fetch trainings for the provided training type, specifically those that are completed.
+    const trainingsQueryDto: GetTrainingsQueryDto = <GetTrainingsQueryDto>{
+      profile: query.profile,
+      trainingType: query.trainingType,
+      trainingStatus: TrainingStatusEnum.COMPLETED,
+    };
+    // Fetch the trainings that match the query.
+    const trainingList: GetTrainingsQueryReturnDto = await this.findAll(trainingsQueryDto);
+    const _trainings: Training[] = trainingList.trainings;
+
+    /*
+    See with @MustafaSarıgül - Show what can be done for future
+    // Gamification logic: See all trainings grouped by training level.
+    return await this.trainingRepository.findAllForTrainingLevel(query.profile, query.trainingType);
+    */
+
+    
+    // Use the helper function to determine available training levels based on the fetched training levels and completed trainings.
+    const _availableLevels: GetAvailableTrainingLevelsQueryReturnDto[] = getAvailableTrainingLevelsByTrainingType(_trainingLevels.trainingLevels, _trainings);
+    
+    return _availableLevels;
   }
 
   async findOne(id: string): Promise<Training> {
