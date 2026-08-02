@@ -83,3 +83,26 @@ export class Training extends Document {
 }
 
 export const TrainingSchema = SchemaFactory.createForClass(Training);
+
+TrainingSchema.index(
+    {
+        profile: 1,
+        trainingType: 1,
+    },
+    {
+        unique: false,
+        name: 'idx_profile_trainingtype'
+    }
+);
+
+TrainingSchema.index(
+    {
+        profile: 1,
+        trainingType: 1,
+        trainingLevel: 1
+    },
+    {
+        unique: false,
+        name: 'idx_profile_trainingtype_traininglevel'
+    }
+);
