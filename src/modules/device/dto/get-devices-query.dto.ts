@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
+import { IsEnum, IsInt, IsMACAddress, IsOptional, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { DeviceStatusEnum } from '../enums/deviceStatus.enum';
 import { TrainingTypeEnum } from '../../training/enums/trainingType.enum';
@@ -29,4 +29,8 @@ export class GetDevicesQueryDto {
     @IsOptional()
     @IsEnum(DeviceStatusEnum, {message: 'Device status is not valid'})
     deviceStatus?: string;
+
+    @IsOptional()
+    @IsMACAddress({message: "MAC Address is not valid!"})
+    macAddress?: string;
 }

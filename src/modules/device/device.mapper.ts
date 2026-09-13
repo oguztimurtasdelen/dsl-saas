@@ -23,7 +23,8 @@ export class DeviceMapper {
             ...(query.trainingType && { trainingType: query.trainingType }),
             ...(query.deviceCode && { deviceCode: query.deviceCode }),
             ...(query.deviceName && { deviceName: query.deviceName }),
-            ...(query.deviceStatus && { deviceStatus: query.deviceStatus })
+            ...(query.deviceStatus && { deviceStatus: query.deviceStatus }),
+            ...(query.macAddress && { macAddress: query.macAddress })
         }
 
         return _filter;
