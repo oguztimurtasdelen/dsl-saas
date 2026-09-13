@@ -4,7 +4,7 @@ import { User } from '../user/user.schema';
 import { UserType } from '../user/user.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { SignInReturnDto } from './dto/signin-return.dto';
 import { Profile } from '../profile/profile.schema';
 import { Document } from "mongoose";
@@ -46,17 +46,18 @@ export class AuthenticationService {
   generateAccessToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+      //expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN as JwtSignOptions['expiresIn'],
+      expiresIn: parseInt(process.env.JWT_ACCESS_TOKEN_EXPIRES_IN, 10), // Convert to number
       issuer: 'dsl-saas',
-      audience: 'dsl-ionic-app-profile',
-      jwtid: crypto.randomUUID()
     });
+
   }
 
   generateCreateProfileToken(payload: any): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_CREATEPROFILE_TOKEN_SECRET_KEY,
-      expiresIn: process.env.JWT_CREATEPROFILE_TOKEN_EXPIRES_IN,
+      //expiresIn: process.env.JWT_CREATEPROFILE_TOKEN_EXPIRES_IN as JwtSignOptions['expiresIn'],
+      expiresIn: parseInt(process.env.JWT_CREATEPROFILE_TOKEN_EXPIRES_IN, 10), // Convert to number
       issuer: 'dsl-saas',
       audience: 'dsl-ionic-app-user',
       jwtid: crypto.randomUUID()
@@ -67,7 +68,8 @@ export class AuthenticationService {
   generateRefreshToken(payload: IAccessTokenPayload): string {
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
-      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+      //expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN as JwtSignOptions['expiresIn'],
+      expiresIn: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRES_IN, 10), // Convert to number
       issuer: 'dsl-saas',
       audience: 'dsl-ionic-app-user-profile',
       jwtid: crypto.randomUUID()
